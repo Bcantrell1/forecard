@@ -9,4 +9,7 @@ module.exports = {
         MESSAGINGSENDERID: process.env.MESSAGINGSENDERID,
         APPID: process.env.APPID,
     },
+    images: {
+        domains: ['lh3.googleusercontent.com'],
+    },
 };

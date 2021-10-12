@@ -2,8 +2,8 @@ html,
 body {
     padding: 0;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: Cantarell, Fira Sans, sans-serif;
+    margin-top: 50px;
 }
 
 a {
@@ -14,6 +14,23 @@ a {
 * {
     box-sizing: border-box;
 }
+main {
+    height: 100%;
+    padding: 1rem 10vw;
+}
+
+.back-drop {
+    z-index: -1;
+}
+
+.btn-login {
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: green;
+    width: 100px;
+    height: 30px;
+}
 
 .loading {
     border: 10px solid black;
@@ -22,6 +39,86 @@ a {
     width: 50px;
     height: 50px;
     animation: spinning 2s linear infinite;
+}
+
+.logo:hover {
+    transform: rotate(5deg);
+}
+
+.btn-green {
+    background-color: #c2fbd7;
+    border-radius: 100px;
+    box-shadow: rgba(44, 187, 99, 0.2) 0 -25px 18px -14px inset,
+        rgba(44, 187, 99, 0.15) 0 1px 2px, rgba(44, 187, 99, 0.15) 0 2px 4px,
+        rgba(44, 187, 99, 0.15) 0 4px 8px, rgba(44, 187, 99, 0.15) 0 8px 16px,
+        rgba(44, 187, 99, 0.15) 0 16px 32px;
+    color: #083b66;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-block;
+    font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto,
+        sans-serif;
+    padding: 7px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.btn-green:hover {
+    box-shadow: rgba(44, 187, 99, 0.35) 0 -25px 18px -14px inset,
+        rgba(44, 187, 99, 0.25) 0 1px 2px, rgba(44, 187, 99, 0.25) 0 2px 4px,
+        rgba(44, 187, 99, 0.25) 0 4px 8px, rgba(44, 187, 99, 0.25) 0 8px 16px,
+        rgba(44, 187, 99, 0.25) 0 16px 32px;
+    transform: scale(1.05) rotate(-1deg);
+}
+
+.navbar {
+    top: 0;
+    background-color: white;
+    height: 70px;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
+    padding: 10px;
+}
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    border-radius: 50%;
+}
+
+.profile-image {
+    border-radius: 30%;
+}
+
+.profile-image:hover {
+    border-radius: 40%;
+    cursor: pointer;
+}
+
+.align-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.white {
+    color: white;
 }
 
 @keyframes spinning {
