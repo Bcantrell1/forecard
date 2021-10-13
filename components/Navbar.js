@@ -3,6 +3,7 @@ import { UserContext } from '../lib/context';
 
 import Link from 'next/link';
 import Image from 'next/image';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
     const { user, username } = useContext(UserContext);
@@ -11,14 +12,16 @@ const Navbar = () => {
         <nav className="navbar">
             <ul>
                 <li>
-                    <Link href="/" passHref>
-                        <Image
-                            className="logo"
-                            src="/forecard.png"
-                            height="120"
-                            width="160"
-                            alt="logo"
-                        />
+                    <Link href="/">
+                        <a>
+                            <Image
+                                className="logo"
+                                src="/forecard.png"
+                                height="120"
+                                width="160"
+                                alt="logo"
+                            />
+                        </a>
                     </Link>
                 </li>
 
@@ -26,22 +29,32 @@ const Navbar = () => {
                 {username && (
                     <>
                         <li>
-                            <Link href={`/${username}/scorecards`} passHref>
-                                <button className="btn-green">
-                                    My Scorecards
-                                </button>
+                            <Link href={`/${username}/scorecards`}>
+                                <a className="btn-green">My Scorecards</a>
                             </Link>
                         </li>
                         <li>
-                            <Link href={`/${username}`} passHref>
-                                <Image
-                                    className="profile-image"
-                                    src={user?.photoURL}
-                                    width="50"
-                                    height="50"
-                                    alt="profile image"
-                                />
-                            </Link>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                }}
+                            >
+                                <ThemeToggle />
+                                <Link href={`/${username}`}>
+                                    <a>
+                                        <Image
+                                            className="profile-image"
+                                            src={
+                                                user?.photoURL ||
+                                                '/user_profile.png'
+                                            }
+                                            width="60"
+                                            height="60"
+                                            alt="profile image"
+                                        />
+                                    </a>
+                                </Link>
+                            </div>
                         </li>
                     </>
                 )}
@@ -49,8 +62,8 @@ const Navbar = () => {
                 {/* Signed-out */}
                 {!username && (
                     <li>
-                        <Link href="/login" passHref>
-                            <button className="btn-login">Log in</button>
+                        <Link href="/login">
+                            <a className="btn-login">Log in</a>
                         </Link>
                     </li>
                 )}

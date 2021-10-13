@@ -2,12 +2,11 @@ import AuthCheck from '../../../components/AuthCheck';
 import ScorecardFeed from '../../../components/ScorecardFeed';
 import NewScorecard from '../../../components/NewScorecard';
 
-import { getUserByUsername, scorecardToJSON } from '../../../lib/firebase';
+import { firestoreDb, auth, getUserByUsername } from '../../../lib/firebase';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 export async function getServerSideProps({ query }) {
     let user = null;
-    let scorecards = null;
-
     const { username } = query;
     const userData = await getUserByUsername(username);
 
@@ -17,37 +16,52 @@ export async function getServerSideProps({ query }) {
 
     if (userData) {
         user = userData.data();
-
-        //Temporary catch for no database field
-        try {
-            const scorecardQuery = userData.ref
-                .collection('scorecards')
-                .where('published', '==', true)
-                .orderBy('createdAt', 'desc')
-                .limit(5);
-            scorecards = (await scorecardQuery.get()).docs.map(scorecardToJSON);
-        } catch (error) {
-            console.log(error);
-        }
     }
 
     return {
         props: {
             user,
-            scorecards,
         },
     };
 }
 
-const Scorecards = ({ user, scorecards }) => {
+const Scorecards = ({ user }) => {
     return (
         <main>
             <AuthCheck user={user}>
-                <div>Scorecards for {user.username}</div>
                 <NewScorecard />
-                <ScorecardFeed scorecards={scorecards} />
+                <ScorecardList />
             </AuthCheck>
         </main>
     );
 };
+
+const ScorecardList = () => {
+    const ref = firestoreDb
+        .collection('users')
+        .doc(auth.currentUser.uid)
+        .collection('scorecards');
+    const query = ref.orderBy('createdAt');
+    const [value, loading, error] = useCollection(query, {
+        snapshotListenOptions: { includeMetadataChanges: true },
+    });
+
+    const scorecards = value?.docs.map((doc) => doc.data());
+
+    return (
+        <>
+            {error && <strong>Error: {JSON.stringify(error)}</strong>}
+            {loading && <span>Scorecards: Loading...</span>}
+            {scorecards && (
+                <>
+                    <h1>Your Scorecards</h1>
+                    <span>
+                        <ScorecardFeed scorecards={scorecards} />
+                    </span>
+                </>
+            )}
+        </>
+    );
+};
+
 export default Scorecards;
