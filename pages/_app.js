@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../styles/globals.scss';
 
 import Navbar from '../components/Navbar';
 import { useUserData } from '../lib/hooks';

@@ -5,17 +5,21 @@ const ScorecardFeed = ({ scorecards }) => {
     return scorecards
         ? scorecards.map((scorecard) => (
               <ul key={scorecard.slug}>
-                  <Scorecard card={scorecard} key={scorecard.slug} />
+                  <ScorecardItem card={scorecard} key={scorecard.slug} />
               </ul>
           ))
         : null;
 };
 
-//Make click event for going to scorecard
-
-const Scorecard = ({ card }) => {
+const ScorecardItem = ({ card }) => {
+    const router = useRouter();
     return (
-        <li>
+        <li
+            className="scorecard-item"
+            onClick={() =>
+                router.push(`/${card.username}/scorecards/${card.slug}`)
+            }
+        >
             <p>{card.slug}</p>
         </li>
     );

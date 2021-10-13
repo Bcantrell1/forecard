@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { UserContext } from '../lib/context';
+import styles from '../styles/Navbar.module.scss';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,13 +10,13 @@ const Navbar = () => {
     const { user, username } = useContext(UserContext);
 
     return (
-        <nav className="navbar">
+        <nav className={styles.navbar}>
             <ul>
                 <li>
                     <Link href="/">
                         <a>
                             <Image
-                                className="logo"
+                                className={styles.logo}
                                 src="/forecard.png"
                                 height="120"
                                 width="160"
@@ -43,7 +44,7 @@ const Navbar = () => {
                                 <Link href={`/${username}`}>
                                     <a>
                                         <Image
-                                            className="profile-image"
+                                            className={styles.profileImage}
                                             src={
                                                 user?.photoURL ||
                                                 '/user_profile.png'
@@ -63,7 +64,7 @@ const Navbar = () => {
                 {!username && (
                     <li>
                         <Link href="/login">
-                            <a className="btn-login">Log in</a>
+                            <a className={styles.btnLogin}>Log in</a>
                         </Link>
                     </li>
                 )}

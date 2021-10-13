@@ -1,23 +1,28 @@
-html,
+html {
+    position: relative;
+    overflow-x: hidden !important;
+}
+
 body {
     background: var(--color-bg-primary);
     margin-top: 50px;
     font-family: Cantarell, Fira Sans, sans-serif;
     color: var(--color-text-primary);
     transition: background 0.25s ease-in-out;
+    margin: 0;
 }
 
 body,
 body[data-theme='light'] {
-    --color-text-primary: #27201a;
+    --color-text-primary: #083b66;
     --color-text-secondary: #076963;
     --color-bg-primary: #fff;
     --color-bg-toggle: #1e90ff;
 }
 
 body[data-theme='dark'] {
-    --color-text-primary: #e3e3e3;
-    --color-text-secondary: #ff6b00;
+    --color-text-primary: #c2fbd7;
+    --color-text-secondary: #ff0000;
     --color-bg-primary: #15232d;
     --color-bg-toggle: #a9a9a9;
 }
@@ -32,7 +37,28 @@ a {
 }
 main {
     height: 100%;
-    padding: 1rem 10vw;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 18px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--color-bg-toggle);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--color-bg-primary);
+    background: var(--color-text-primary);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
 }
 
 .align-middle {
@@ -46,15 +72,6 @@ main {
     z-index: -1;
 }
 
-.btn-login {
-    border-radius: 10px;
-    border: none;
-    color: white;
-    background-color: green;
-    width: 100px;
-    height: 30px;
-}
-
 .loading {
     border: 10px solid black;
     border-top: 10px solid green;
@@ -62,10 +79,6 @@ main {
     width: 50px;
     height: 50px;
     animation: spinning 2s linear infinite;
-}
-
-.logo:hover {
-    transform: rotate(5deg);
 }
 
 .btn-green {
@@ -124,36 +137,12 @@ main {
     touch-action: manipulation;
 }
 
-.navbar {
-    top: 0;
-    height: 70px;
-    width: 100%;
-    position: fixed;
-    z-index: 100;
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
-    padding: 10px;
-}
-.navbar ul {
+.scorecard-item {
     list-style-type: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar li {
-    border-radius: 50%;
-}
-
-.profile-image {
-    border-radius: 30%;
-}
-
-.profile-image:hover {
-    border-radius: 40%;
     cursor: pointer;
+    background-color: azure;
+    width: 100px;
+    height: 100px;
 }
 
 .toggle-btn {

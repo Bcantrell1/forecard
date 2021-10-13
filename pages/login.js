@@ -2,10 +2,11 @@ import { useContext } from 'react';
 import { UserContext } from '../lib/context';
 
 import SignInButton from '../components/SignInButton';
-import SignOutButton from '../components/SignOutButton';
 import UserNameForm from '../components/UserNameForm';
+import { useRouter } from 'next/dist/client/router';
 
 const Login = (props) => {
+    const router = useRouter();
     const { user, username } = useContext(UserContext);
 
     return (
@@ -14,7 +15,9 @@ const Login = (props) => {
                 !username ? (
                     <UserNameForm />
                 ) : (
-                    <SignOutButton />
+                    <button onClick={() => router.push(`/${username}`)}>
+                        User Profile
+                    </button>
                 )
             ) : (
                 <SignInButton />
