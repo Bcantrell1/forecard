@@ -32,7 +32,10 @@ const NewScorecard = () => {
             uid,
             username,
             published: false,
-            content: {},
+            content: {
+                score: {},
+                par: {},
+            },
             createdAt: serverTimeStamp(),
             updatedAt: serverTimeStamp(),
         };

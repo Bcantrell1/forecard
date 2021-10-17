@@ -1,0 +1,65 @@
+.cardContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.front9,
+.back9 {
+    font-size: 1.5vw;
+    .hole {
+        background-color: #f63;
+        color: #fff;
+        span {
+            padding: 0.5rem 0;
+        }
+    }
+    .par {
+        background-color: #ccc;
+        color: #777;
+        span {
+            padding: 0.25rem 0;
+        }
+    }
+    .score {
+        color: #f63;
+        span {
+            padding: 0.75rem 0;
+        }
+    }
+    span {
+        border: rgba(0, 0, 0, 0.25) solid 1px;
+        border-width: 0 0 0 1px;
+        display: inline-block;
+        text-align: center;
+        width: 3em;
+
+        &:first-child {
+            text-align: left;
+            padding-left: 0.5em;
+            border-width: 0;
+        }
+    }
+}
+.back9 span:first-child {
+    display: none;
+}
+
+@media screen and (max-width: 50em) {
+    .cardContainer {
+        flex-direction: column;
+    }
+    // .front9,
+    // .back9 {
+    //     display: inline-block;
+    // }
+    .back9 span:first-child {
+        display: inline-block;
+    }
+}
+
+@media screen and (max-width: 40em) {
+    .cardContainer {
+        font-size: 2vw;
+    }
+}

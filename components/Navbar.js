@@ -12,14 +12,14 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <ul>
-                <li>
+                <li className={styles.logo}>
                     <Link href="/">
                         <a>
                             <Image
-                                className={styles.logo}
                                 src="/forecard.png"
-                                height="120"
-                                width="160"
+                                width={200}
+                                height={70}
+                                layout="responsive"
                                 alt="logo"
                             />
                         </a>
@@ -31,31 +31,28 @@ const Navbar = () => {
                     <>
                         <li>
                             <Link href={`/${username}/scorecards`}>
-                                <a className="btn-green">My Scorecards</a>
+                                <a className="scorecardButton">My Scorecards</a>
                             </Link>
                         </li>
                         <li>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                }}
-                            >
-                                <ThemeToggle />
-                                <Link href={`/${username}`}>
-                                    <a>
-                                        <Image
-                                            className={styles.profileImage}
-                                            src={
-                                                user?.photoURL ||
-                                                '/user_profile.png'
-                                            }
-                                            width="60"
-                                            height="60"
-                                            alt="profile image"
-                                        />
-                                    </a>
-                                </Link>
-                            </div>
+                            <ThemeToggle />
+                        </li>
+                        <li>
+                            <Link href={`/${username}`}>
+                                <a>
+                                    <Image
+                                        src={
+                                            user?.photoURL ||
+                                            '/user_profile.png'
+                                        }
+                                        layout="fixed"
+                                        width={60}
+                                        height={60}
+                                        className={styles.profileImage}
+                                        alt="profile image"
+                                    />
+                                </a>
+                            </Link>
                         </li>
                     </>
                 )}
