@@ -14,6 +14,7 @@ const ScorecardFeed = ({ scorecards }) => {
 
 const ScorecardItem = ({ card }) => {
     const router = useRouter();
+    console.log(card);
     return (
         <div
             className={styles.cardItem}
