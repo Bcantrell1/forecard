@@ -1,30 +1,30 @@
-.scorecardWrapper {
+.cardContainer {
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
 }
 
 .front9,
 .back9 {
-    margin-bottom: 1em;
+    font-size: 1.5vw;
     .hole {
         background-color: #f63;
         color: #fff;
         span {
-            padding: 0.5em 0;
+            padding: 0.5rem 0;
         }
     }
     .par {
         background-color: #ccc;
         color: #777;
         span {
-            padding: 0.25em 0;
+            padding: 0.25rem 0;
         }
     }
     .score {
         color: #f63;
         span {
-            padding: 0.75em 0;
+            padding: 0.75rem 0;
         }
     }
     span {
@@ -36,21 +36,30 @@
 
         &:first-child {
             text-align: left;
-            padding-left: 2px;
+            padding-left: 0.5em;
             border-width: 0;
         }
     }
 }
+.back9 span:first-child {
+    display: none;
+}
 
-@media screen and (min-width: 80em) {
-    .front9,
-    .back9 {
+@media screen and (max-width: 50em) {
+    .cardContainer {
+        flex-direction: column;
+    }
+    // .front9,
+    // .back9 {
+    //     display: inline-block;
+    // }
+    .back9 span:first-child {
         display: inline-block;
     }
-    .scorecardWrapper {
-        flex-direction: row;
-    }
-    .back9 span:first-child {
-        display: none;
+}
+
+@media screen and (max-width: 40em) {
+    .cardContainer {
+        font-size: 2vw;
     }
 }

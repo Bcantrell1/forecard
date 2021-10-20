@@ -5,7 +5,7 @@ html {
 
 body {
     background: var(--color-bg-primary);
-    margin-top: 50px;
+    margin-top: 3rem;
     font-family: Cantarell, Fira Sans, sans-serif;
     color: var(--color-text-primary);
     transition: background 0.25s ease-in-out;
@@ -39,73 +39,44 @@ main {
     height: 100%;
 }
 
-/* width */
-::-webkit-scrollbar {
-    width: 18px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: var(--color-bg-toggle);
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    border: 2px solid var(--color-bg-primary);
-    background: var(--color-text-primary);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-secondary);
-}
-
-.align-middle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .back-drop {
     z-index: -1;
 }
 
 .loading {
-    border: 10px solid black;
+    border: 0.6rem solid black;
     border-top: 10px solid green;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 3rem;
+    height: 3rem;
     animation: spinning 2s linear infinite;
 }
 
-.btn-green {
+.scorecardButton {
     background-color: #c2fbd7;
-    border-radius: 100px;
+    border-radius: 1rem;
     box-shadow: rgba(44, 187, 99, 0.2) 0 -25px 18px -14px inset,
         rgba(44, 187, 99, 0.15) 0 1px 2px, rgba(44, 187, 99, 0.15) 0 2px 4px,
         rgba(44, 187, 99, 0.15) 0 4px 8px, rgba(44, 187, 99, 0.15) 0 8px 16px,
         rgba(44, 187, 99, 0.15) 0 16px 32px;
     color: #083b66;
     font-weight: 700;
+    font-size: 1.5vw;
     cursor: pointer;
     display: inline-block;
     font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto,
         sans-serif;
-    padding: 7px 20px;
+    padding: 0.5rem 1.3rem;
     text-align: center;
     text-decoration: none;
     transition: all 250ms;
     border: 0;
-    font-size: 16px;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
 }
 
-.btn-green:hover {
+.scorecardButton:hover {
     box-shadow: rgba(44, 187, 99, 0.35) 0 -25px 18px -14px inset,
         rgba(44, 187, 99, 0.25) 0 1px 2px, rgba(44, 187, 99, 0.25) 0 2px 4px,
         rgba(44, 187, 99, 0.25) 0 4px 8px, rgba(44, 187, 99, 0.25) 0 8px 16px,
@@ -115,7 +86,7 @@ main {
 
 .btn-red {
     background-color: #fbc4c2;
-    border-radius: 100px;
+    border-radius: 1rem;
     box-shadow: rgba(187, 44, 44, 0.2) 0 -25px 18px -14px inset,
         rgba(187, 44, 44, 0.171) 0 1px 2px, rgba(187, 44, 44, 0.15) 0 2px 4px,
         rgba(187, 44, 44, 0.15) 0 4px 8px, rgba(187, 44, 44, 0.15) 0 8px 16px,
@@ -126,12 +97,11 @@ main {
     display: inline-block;
     font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto,
         sans-serif;
-    padding: 7px 20px;
+    padding: 0.5rem 1.3rem;
     text-align: center;
     text-decoration: none;
     transition: all 250ms;
     border: 0;
-    font-size: 16px;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -146,9 +116,9 @@ main {
 }
 
 .toggle-btn {
-    --toggle-width: 80px;
-    --toggle-height: 38px;
-    --toggle-padding: 2px;
+    --toggle-width: 5rem;
+    --toggle-height: 2.375rem;
+    --toggle-padding: 0.125rem;
     position: relative;
     display: flex;
     align-items: center;
@@ -158,7 +128,7 @@ main {
     width: var(--toggle-width);
     height: var(--toggle-height);
     padding: var(--toggle-padding);
-    margin: 10px;
+    margin: 1rem;
     border: 0;
     border-radius: calc(var(--toggle-width) / 2);
     cursor: pointer;
@@ -200,4 +170,33 @@ main {
     100% {
         transform: rotate(360deg);
     }
+}
+
+@media screen and (max-width: 40em) {
+    .scorecardButton {
+        display: none;
+    }
+}
+
+/**********Scroll Bar***********/
+/* width */
+::-webkit-scrollbar {
+    width: 18px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--color-bg-toggle);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--color-bg-primary);
+    background: var(--color-text-primary);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
 }

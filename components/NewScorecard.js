@@ -44,7 +44,6 @@ const NewScorecard = () => {
 
     useEffect(() => {
         checkTitle(title);
-        console.log(isValid, isValidTitle);
     }, [title]);
 
     const checkTitle = useCallback(
