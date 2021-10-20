@@ -7,13 +7,12 @@ export async function getServerSideProps({ query }) {
     let user = null;
     const { username } = query;
     const userData = await getUserByUsername(username);
-
     if (!userData) {
         return { notFound: true };
     }
 
     if (userData) {
-        user = userData.data();
+        user = userData;
     }
 
     return {

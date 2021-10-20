@@ -1,22 +1,33 @@
-import { firestoreDb, auth } from '../lib/firebase';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { firestore, auth } from '../lib/firebase';
+import { useState, useEffect } from 'react';
 import ScorecardFeed from './ScorecardFeed';
+import {
+    orderBy,
+    query,
+    collection,
+    limit,
+    onSnapshot,
+} from '@firebase/firestore';
 
 const ScorecardList = () => {
-    const ref = firestoreDb
-        .collection('users')
-        .doc(auth.currentUser.uid)
-        .collection('scorecards');
-    const query = ref.orderBy('createdAt', 'desc');
-    const [collection, loading, error] = useCollection(query, {
-        snapshotListenOptions: { includeMetadataChanges: true },
-    });
-    const scorecards = collection?.docs.map((doc) => doc.data());
+    let [scorecards, setScorecards] = useState([]);
+    const ref = collection(
+        firestore,
+        'users',
+        auth.currentUser.uid,
+        'scorecards'
+    );
+    const listQuery = query(ref, limit(20), orderBy('createdAt', 'desc'));
+
+    useEffect(() => {
+        onSnapshot(listQuery, (docSnap) => {
+            const data = docSnap.docs.map((doc) => doc.data());
+            setScorecards(data);
+        });
+    }, []);
 
     return (
         <>
-            {error && <strong>Error: {JSON.stringify(error)}</strong>}
-            {loading && <span>Scorecards: Loading...</span>}
             {scorecards && (
                 <>
                     <h1>Your Scorecards</h1>

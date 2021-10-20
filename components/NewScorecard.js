@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '../lib/context';
-import { serverTimeStamp, firestoreDb, auth } from '../lib/firebase';
+import { serverTimeStamp, firestore, auth } from '../lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { kebabCase, debounce } from 'lodash';
 import toast from 'react-hot-toast';
@@ -20,11 +21,7 @@ const NewScorecard = () => {
     const createScorecard = async (e) => {
         e.preventDefault();
         const uid = auth.currentUser.uid;
-        const ref = firestoreDb
-            .collection('users')
-            .doc(uid)
-            .collection('scorecards')
-            .doc(slug);
+        const ref = doc(firestore, 'users', uid, 'scorecards', slug);
 
         const data = {
             title,
@@ -33,14 +30,16 @@ const NewScorecard = () => {
             username,
             published: false,
             content: {},
-            createdAt: serverTimeStamp(),
-            updatedAt: serverTimeStamp(),
+            createdAt: serverTimeStamp,
+            updatedAt: serverTimeStamp,
         };
-        await ref.set(data);
+        await setDoc(ref, data);
 
         toast.success('Scorecard Saved');
 
-        router.push(`/${username}/scorecards/${slug}`);
+        setTimeout(() => {
+            router.push(`/${username}/scorecards/${slug}`);
+        }, 1500);
     };
 
     useEffect(() => {
@@ -51,10 +50,12 @@ const NewScorecard = () => {
     const checkTitle = useCallback(
         debounce(async (title) => {
             if (title.length >= 3) {
-                const ref = firestoreDb.doc(
+                const ref = doc(
+                    firestore,
                     `users/${auth.currentUser.uid}/scorecards/${title}`
                 );
-                const { exists } = await ref.get();
+                const checkTitle = await getDoc(ref);
+                const exists = checkTitle.exists();
                 console.log('Firestore read executed!');
                 setIsValidTitle(!exists);
                 setLoading(false);

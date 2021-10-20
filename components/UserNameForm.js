@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { UserContext } from '../lib/context';
-import { firestoreDb } from '../lib/firebase';
+import { firestore } from '../lib/firebase';
+import { writeBatch, getDoc, doc } from 'firebase/firestore';
 import { debounce } from 'lodash';
 
 const UserNameForm = () => {
@@ -14,11 +15,11 @@ const UserNameForm = () => {
         e.preventDefault();
 
         // Create refs for both documents
-        const userDoc = firestoreDb.doc(`users/${user.uid}`);
-        const usernameDoc = firestoreDb.doc(`usernames/${formValue}`);
+        const userDoc = doc(firestore, `users/${user.uid}`);
+        const usernameDoc = doc(firestore, `usernames/${formValue}`);
 
         // Commit both docs together as a batch write.
-        const batch = firestoreDb.batch();
+        const batch = writeBatch(firestore);
         batch.set(userDoc, {
             username: formValue,
             photoURL: user.photoURL,
@@ -59,8 +60,8 @@ const UserNameForm = () => {
     const checkUsername = useCallback(
         debounce(async (username) => {
             if (username.length >= 3) {
-                const ref = firestoreDb.doc(`usernames/${username}`);
-                const { exists } = await ref.get();
+                const ref = doc(firestore, `usernames/${username}`);
+                const { exists } = await getDoc(ref);
                 console.log('Firestore read executed!');
                 setIsValid(!exists);
                 setLoading(false);

@@ -1,9 +1,8 @@
 import AuthCheck from '../../../components/AuthCheck';
-import ScorecardFeed from '../../../components/ScorecardFeed';
+import ScorecardList from '../../../components/ScorecardList';
 import NewScorecard from '../../../components/NewScorecard';
 
-import { firestoreDb, auth, getUserByUsername } from '../../../lib/firebase';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { getUserByUsername } from '../../../lib/firebase';
 
 export async function getServerSideProps({ query }) {
     let user = null;
@@ -15,7 +14,7 @@ export async function getServerSideProps({ query }) {
     }
 
     if (userData) {
-        user = userData.data();
+        user = userData;
     }
 
     return {
@@ -33,34 +32,6 @@ const Scorecards = ({ user }) => {
                 <ScorecardList />
             </AuthCheck>
         </main>
-    );
-};
-
-const ScorecardList = () => {
-    const ref = firestoreDb
-        .collection('users')
-        .doc(auth.currentUser.uid)
-        .collection('scorecards');
-    const query = ref.orderBy('createdAt');
-    const [value, loading, error] = useCollection(query, {
-        snapshotListenOptions: { includeMetadataChanges: true },
-    });
-
-    const scorecards = value?.docs.map((doc) => doc.data());
-
-    return (
-        <>
-            {error && <strong>Error: {JSON.stringify(error)}</strong>}
-            {loading && <span>Scorecards: Loading...</span>}
-            {scorecards && (
-                <>
-                    <h1>Your Scorecards</h1>
-                    <span>
-                        <ScorecardFeed scorecards={scorecards} />
-                    </span>
-                </>
-            )}
-        </>
     );
 };
 

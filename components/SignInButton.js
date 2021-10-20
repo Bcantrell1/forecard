@@ -1,9 +1,11 @@
 import { auth, googleAuthProvider } from '../lib/firebase';
 import Image from 'next/image';
 
+import { signInWithPopup } from 'firebase/auth';
+
 const SignInButton = () => {
     const googleSignIn = async () => {
-        await auth.signInWithPopup(googleAuthProvider);
+        await signInWithPopup(auth, googleAuthProvider);
     };
 
     return (

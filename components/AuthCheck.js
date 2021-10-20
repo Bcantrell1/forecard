@@ -6,7 +6,6 @@ import { UserContext } from '../lib/context';
 const AuthCheck = ({ user, children }) => {
     let authenticated = false;
     const { username } = useContext(UserContext);
-
     if (username === user?.username) {
         console.log('User is Authenticated');
         authenticated = true;

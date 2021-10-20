@@ -8,7 +8,6 @@ import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
     const { user, username } = useContext(UserContext);
-
     return (
         <nav className={styles.navbar}>
             <ul>
@@ -18,8 +17,8 @@ const Navbar = () => {
                             <Image
                                 className={styles.logo}
                                 src="/forecard.png"
-                                height="120"
-                                width="160"
+                                height="70"
+                                width="120"
                                 alt="logo"
                             />
                         </a>
