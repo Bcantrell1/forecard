@@ -36,18 +36,9 @@ export async function getServerSideProps({ params }) {
 }
 
 const Scorecard = ({ user, slug, scorecard }) => {
-    const parse = JSON.parse(scorecard);
-    const par = parse.content.par;
-    const score = parse.content.score;
-    let front = 0;
-    let back = 0;
-    for (let i = 0; i < score.length; i++) {
-        if (i < 9) {
-            front += score[i];
-        } else {
-            back += score[i];
-        }
-    }
+    const card = JSON.parse(scorecard);
+    const par = card.content.par;
+    const score = card.content.score;
 
     return scorecard ? (
         <AuthCheck user={user}>
@@ -78,7 +69,7 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{par.hole7}</span>
                         <span>{par.hole8}</span>
                         <span>{par.hole9}</span>
-                        <span>36</span>
+                        <span>0</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -91,7 +82,7 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{score.hole7}</span>
                         <span>{score.hole8}</span>
                         <span>{score.hole9}</span>
-                        <span className={styles.sub}>{front}</span>
+                        <span className={styles.sub}>0</span>
                     </div>
                 </article>
                 <article className={styles.back9}>
@@ -120,8 +111,8 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{par.hole16}</span>
                         <span>{par.hole17}</span>
                         <span>{par.hole18}</span>
-                        <span>36</span>
-                        <span>72</span>
+                        <span>0</span>
+                        <span>0</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -134,8 +125,8 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{score.hole16}</span>
                         <span>{score.hole17}</span>
                         <span>{score.hole18}</span>
-                        <span className={styles.sub}>{back}</span>
-                        <span className={styles.total}>{front + back}</span>
+                        <span className={styles.sub}>0</span>
+                        <span className={styles.total}>0</span>
                     </div>
                 </article>
             </div>
