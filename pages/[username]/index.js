@@ -1,5 +1,6 @@
 import AuthCheck from '../../components/AuthCheck';
 import ScorecardList from '../../components/ScorecardList';
+import NewScorecard from '../../components/NewScorecard';
 import { UserProfile } from '../../components/UserProfile';
 import { getUserByUsername } from '../../lib/firebase';
 
@@ -27,6 +28,7 @@ const UserProfilePage = ({ user }) => {
         <main>
             <AuthCheck user={user}>
                 <UserProfile user={user} />
+                <NewScorecard />
                 <ScorecardList />
             </AuthCheck>
         </main>

@@ -36,10 +36,23 @@ export async function getServerSideProps({ params }) {
 }
 
 const Scorecard = ({ user, slug, scorecard }) => {
+    const parse = JSON.parse(scorecard);
+    const par = parse.content.par;
+    const score = parse.content.score;
+    let front = 0;
+    let back = 0;
+    for (let i = 0; i < score.length; i++) {
+        if (i < 9) {
+            front += score[i];
+        } else {
+            back += score[i];
+        }
+    }
+
     return scorecard ? (
         <AuthCheck user={user}>
             <h1>{slug}</h1>
-            <div className={styles.scorecardWrapper}>
+            <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
                         <span>Front</span>
@@ -56,29 +69,29 @@ const Scorecard = ({ user, slug, scorecard }) => {
                     </div>
                     <div className={styles.par}>
                         <span>Par</span>
-                        <span>3</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>4</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>4</span>
+                        <span>{par.hole1}</span>
+                        <span>{par.hole2}</span>
+                        <span>{par.hole3}</span>
+                        <span>{par.hole4}</span>
+                        <span>{par.hole5}</span>
+                        <span>{par.hole6}</span>
+                        <span>{par.hole7}</span>
+                        <span>{par.hole8}</span>
+                        <span>{par.hole9}</span>
                         <span>36</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
-                        <span>3</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>3</span>
-                        <span>3</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>4</span>
-                        <span className={styles.sub}>36</span>
+                        <span>{score.hole1}</span>
+                        <span>{score.hole2}</span>
+                        <span>{score.hole3}</span>
+                        <span>{score.hole4}</span>
+                        <span>{score.hole5}</span>
+                        <span>{score.hole6}</span>
+                        <span>{score.hole7}</span>
+                        <span>{score.hole8}</span>
+                        <span>{score.hole9}</span>
+                        <span className={styles.sub}>{front}</span>
                     </div>
                 </article>
                 <article className={styles.back9}>
@@ -98,31 +111,31 @@ const Scorecard = ({ user, slug, scorecard }) => {
                     </div>
                     <div className={styles.par}>
                         <span>Par</span>
-                        <span>5</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>3</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>4</span>
-                        <span>3</span>
-                        <span>5</span>
+                        <span>{par.hole10}</span>
+                        <span>{par.hole11}</span>
+                        <span>{par.hole12}</span>
+                        <span>{par.hole13}</span>
+                        <span>{par.hole14}</span>
+                        <span>{par.hole15}</span>
+                        <span>{par.hole16}</span>
+                        <span>{par.hole17}</span>
+                        <span>{par.hole18}</span>
                         <span>36</span>
                         <span>72</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
-                        <span>6</span>
-                        <span>2</span>
-                        <span>5</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>4</span>
-                        <span>3</span>
-                        <span>6</span>
-                        <span className={styles.sub}>41</span>
-                        <span className={styles.total}>77</span>
+                        <span>{score.hole10}</span>
+                        <span>{score.hole11}</span>
+                        <span>{score.hole12}</span>
+                        <span>{score.hole13}</span>
+                        <span>{score.hole14}</span>
+                        <span>{score.hole15}</span>
+                        <span>{score.hole16}</span>
+                        <span>{score.hole17}</span>
+                        <span>{score.hole18}</span>
+                        <span className={styles.sub}>{back}</span>
+                        <span className={styles.total}>{front + back}</span>
                     </div>
                 </article>
             </div>

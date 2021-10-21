@@ -29,12 +29,12 @@ const ScorecardList = () => {
     return (
         <>
             {scorecards && (
-                <>
+                <div style={{ textAlign: 'center' }}>
                     <h1>Your Scorecards</h1>
                     <span>
                         <ScorecardFeed scorecards={scorecards} />
                     </span>
-                </>
+                </div>
             )}
         </>
     );

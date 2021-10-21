@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styles from '../styles/ScorecardFeed.module.scss';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -14,7 +15,6 @@ const ScorecardFeed = ({ scorecards }) => {
 
 const ScorecardItem = ({ card }) => {
     const router = useRouter();
-    console.log(card);
     return (
         <div
             className={styles.cardItem}
@@ -25,6 +25,13 @@ const ScorecardItem = ({ card }) => {
             <div className={styles.cardHeader}>
                 <div className={styles.cardUser}>{card.title}</div>
             </div>
+            <Image
+                className={styles.cardImage}
+                src="/card_item.png"
+                height={250}
+                width={250}
+                layout="responsive"
+            />
         </div>
     );
 };

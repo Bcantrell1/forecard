@@ -8,9 +8,9 @@
 }
 
 .logo {
-    height: 87px;
+    height: 70px;
     width: 200px;
-    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .logo:hover {
@@ -46,4 +46,46 @@
 .profileImage:hover {
     border-radius: 40%;
     cursor: pointer;
+}
+
+.scorecardButton {
+    background-color: #c2fbd7;
+    border-radius: 1.4rem;
+    box-shadow: rgba(44, 187, 99, 0.2) 0 -25px 18px -14px inset,
+        rgba(44, 187, 99, 0.15) 0 1px 2px, rgba(44, 187, 99, 0.15) 0 2px 4px,
+        rgba(44, 187, 99, 0.15) 0 4px 8px, rgba(44, 187, 99, 0.15) 0 8px 16px,
+        rgba(44, 187, 99, 0.15) 0 16px 32px;
+    color: #083b66;
+    font-weight: 700;
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.5rem 1.3rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.scorecardButton:hover {
+    box-shadow: rgba(44, 187, 99, 0.35) 0 -25px 18px -14px inset,
+        rgba(44, 187, 99, 0.25) 0 1px 2px, rgba(44, 187, 99, 0.25) 0 2px 4px,
+        rgba(44, 187, 99, 0.25) 0 4px 8px, rgba(44, 187, 99, 0.25) 0 8px 16px,
+        rgba(44, 187, 99, 0.25) 0 16px 32px;
+    transform: scale(1.05) rotate(-1deg);
+}
+
+@media screen and (max-width: 20em) {
+    .logo {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 30em) {
+    .scorecardButton {
+        display: none;
+    }
 }

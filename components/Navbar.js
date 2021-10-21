@@ -16,7 +16,7 @@ const Navbar = () => {
                         <a>
                             <Image
                                 src="/forecard.png"
-                                width={200}
+                                width={180}
                                 height={70}
                                 layout="responsive"
                                 alt="logo"
@@ -30,7 +30,9 @@ const Navbar = () => {
                     <>
                         <li>
                             <Link href={`/${username}/scorecards`}>
-                                <a className="scorecardButton">My Scorecards</a>
+                                <a className={styles.scorecardButton}>
+                                    My Scorecards
+                                </a>
                             </Link>
                         </li>
                         <li>
