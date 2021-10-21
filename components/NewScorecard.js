@@ -11,8 +11,8 @@ const NewScorecard = () => {
     const router = useRouter();
     const { username } = useContext(UserContext);
     const [title, setTitle] = useState('');
-    const [state, setState] = useState(null);
-    const [city, setCity] = useState(null);
+    const [states, setStates] = useState(null);
+    const [cities, setCities] = useState(null);
     const [isValidTitle, setIsValidTitle] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -148,20 +148,52 @@ const NewScorecard = () => {
         }, 1500);
     };
 
+    const getStates = async () => {
+        let states = [];
+        const ref = collection(firestore, `courses`);
+        let stateSnapshot = await getDocs(ref);
+        stateSnapshot.forEach((state) => {
+            states.push(state.id);
+        });
+        setStates(states);
+    };
+
+    const getCities = async (state) => {
+        let cities = [];
+        if (state) {
+            const ref = doc(firestore, 'courses', state);
+            let citySnapshot = await getDoc(ref);
+            // citySnapshot.forEach((city) => {
+            //     console.log(city.id);
+            //     cities.push(city.id);
+            // });
+            console.log(citySnapshot.id);
+            // setCities(cities);
+        }
+    };
+
     const getCourses = async (state, city) => {
+        let courses = [];
         if (state && city) {
             const ref = collection(firestore, `courses/${state}/${city}`);
-            const courseList = await getDocs(ref);
+            let courseList = await getDocs(ref);
             courseList.forEach((course) => {
-                console.log(course.data());
+                courses.push(course.id);
             });
         }
+        return courses;
     };
 
     useEffect(() => {
         checkTitle(title);
-        getCourses(state, city);
-    }, [title, state, city]);
+        getStates();
+        if (states) {
+            getCities(states);
+        }
+        // if (states && cities) {
+        //     return getCourses(states, cities);
+        // }
+    }, [title]);
 
     const checkTitle = useCallback(
         debounce(async (title) => {
@@ -196,7 +228,20 @@ const NewScorecard = () => {
                 isValid={isValid}
             />
             <p>Scorecard Name: {slug}</p>
-            {/* <CourseSelect courses={courses} /> */}
+            {states ? (
+                <select onClick={(e) => getCities(e.target.value)}>
+                    {states.map((state) => {
+                        return <option key={state}>{state}</option>;
+                    })}
+                </select>
+            ) : null}
+            {cities ? (
+                <select>
+                    {cities.map((city) => {
+                        return <option key={city}>{city}</option>;
+                    })}
+                </select>
+            ) : null}
             <button
                 type="submit"
                 disabled={!isValidTitle || !isValid ? 'disabled' : null}
