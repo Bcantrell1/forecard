@@ -1,5 +1,4 @@
-import styles from '../../../styles/Scorecard.module.scss';
-import AuthCheck from '../../../components/AuthCheck';
+import { useState } from 'react';
 import { useRouter } from 'next/dist/client/router';
 import {
     firestore,
@@ -8,6 +7,12 @@ import {
     serverTimeStamp,
 } from '../../../lib/firebase';
 import { doc, getDoc, deleteDoc, updateDoc } from '@firebase/firestore';
+
+import styles from '../../../styles/Scorecard.module.scss';
+import { AnimatePresence } from 'framer-motion';
+
+import AuthCheck from '../../../components/AuthCheck';
+import ScoreModal from '../../../components/ScoreModal';
 
 export async function getServerSideProps({ params }) {
     const { username, slug } = params;
@@ -31,6 +36,7 @@ export async function getServerSideProps({ params }) {
     return {
         props: {
             user,
+            username,
             userUid,
             slug,
             scorecard,
@@ -38,7 +44,10 @@ export async function getServerSideProps({ params }) {
     };
 }
 
-const Scorecard = ({ user, userUid, slug, scorecard }) => {
+const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
+    const [modalOpen, setModalOpen] = useState(false);
+    const close = () => setModalOpen(false);
+    const open = () => setModalOpen(true);
     const router = useRouter();
     const card = JSON.parse(scorecard);
     const par = card.content.par;
@@ -46,7 +55,7 @@ const Scorecard = ({ user, userUid, slug, scorecard }) => {
 
     const deleteCard = async () => {
         const ref = doc(firestore, `users/${userUid}/scorecards/${slug}`);
-        await deleteDoc(ref).then(router.push(`/${user}/scorecards`));
+        await deleteDoc(ref).then(router.push(`/${username}/scorecards`));
     };
 
     const updateHole = async (holeId, score) => {
@@ -95,7 +104,9 @@ const Scorecard = ({ user, userUid, slug, scorecard }) => {
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
-                        <span>{score.hole1}</span>
+                        <span onClick={() => (modalOpen ? close() : open())}>
+                            {score.hole1}
+                        </span>
                         <span>{score.hole2}</span>
                         <span>{score.hole3}</span>
                         <span>{score.hole4}</span>
@@ -152,6 +163,15 @@ const Scorecard = ({ user, userUid, slug, scorecard }) => {
                     </div>
                 </article>
             </div>
+            <AnimatePresence
+                initial={false}
+                exitBeforeEnter={true}
+                onExitComplete={() => null}
+            >
+                {modalOpen && (
+                    <ScoreModal modalOpen={modalOpen} handleClose={close} />
+                )}
+            </AnimatePresence>
         </AuthCheck>
     ) : null;
 };

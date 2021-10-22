@@ -25,6 +25,12 @@
         color: #f63;
         span {
             padding: 0.55rem 0;
+            &:not(:nth-child(11), :nth-child(1), :nth-child(21), :last-child) {
+                &:hover {
+                    background-color: #f63;
+                    color: #fff;
+                }
+            }
         }
     }
     span {
