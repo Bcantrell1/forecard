@@ -64,6 +64,9 @@ const NewScorecard = () => {
                     hole16: hole[16].par,
                     hole17: hole[17].par,
                     hole18: hole[18].par,
+                    front: hole.front,
+                    back: hole.back,
+                    total: hole.total,
                 },
                 score: {
                     hole1: 0,

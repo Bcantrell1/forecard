@@ -1,11 +1,13 @@
 import styles from '../../../styles/Scorecard.module.scss';
 import AuthCheck from '../../../components/AuthCheck';
+import { useRouter } from 'next/dist/client/router';
 import {
     firestore,
     getUserByUsername,
     getUserUid,
+    serverTimeStamp,
 } from '../../../lib/firebase';
-import { doc, getDoc } from '@firebase/firestore';
+import { doc, getDoc, deleteDoc, updateDoc } from '@firebase/firestore';
 
 export async function getServerSideProps({ params }) {
     const { username, slug } = params;
@@ -29,20 +31,40 @@ export async function getServerSideProps({ params }) {
     return {
         props: {
             user,
+            userUid,
             slug,
             scorecard,
         },
     };
 }
 
-const Scorecard = ({ user, slug, scorecard }) => {
+const Scorecard = ({ user, userUid, slug, scorecard }) => {
+    const router = useRouter();
     const card = JSON.parse(scorecard);
     const par = card.content.par;
     const score = card.content.score;
 
+    const deleteCard = async () => {
+        const ref = doc(firestore, `users/${userUid}/scorecards/${slug}`);
+        await deleteDoc(ref).then(router.push(`/${user}/scorecards`));
+    };
+
+    const updateHole = async (holeId, score) => {
+        const holeRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
+        await updateDoc(holeRef, {
+            content: {
+                score: {
+                    [holeId]: score,
+                },
+            },
+            updatedAt: serverTimeStamp,
+        });
+    };
+
     return scorecard ? (
         <AuthCheck user={user}>
             <h1>{slug}</h1>
+            <button onClick={deleteCard}> Delete </button>
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
@@ -69,7 +91,7 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{par.hole7}</span>
                         <span>{par.hole8}</span>
                         <span>{par.hole9}</span>
-                        <span>0</span>
+                        <span>{par.front}</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -111,8 +133,8 @@ const Scorecard = ({ user, slug, scorecard }) => {
                         <span>{par.hole16}</span>
                         <span>{par.hole17}</span>
                         <span>{par.hole18}</span>
-                        <span>0</span>
-                        <span>0</span>
+                        <span>{par.back}</span>
+                        <span>{par.total}</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
