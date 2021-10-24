@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/router';
 import {
     firestore,
     getUserByUsername,
     getUserUid,
     serverTimeStamp,
+    getScorecard,
 } from '../../../lib/firebase';
 import { doc, getDoc, deleteDoc, updateDoc } from '@firebase/firestore';
 
@@ -27,10 +28,7 @@ export async function getServerSideProps({ params }) {
 
     if (userData) {
         user = userData;
-        const ref = doc(firestore, 'users', userUid, 'scorecards', slug);
-        const scorecardInfo = await getDoc(ref);
-        const data = JSON.stringify(scorecardInfo.data());
-        scorecard = data;
+        scorecard = await getScorecard(userUid, slug);
     }
 
     return {
@@ -46,6 +44,7 @@ export async function getServerSideProps({ params }) {
 
 const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [holeId, setHoleId] = useState('');
     const close = () => setModalOpen(false);
     const open = () => setModalOpen(true);
     const router = useRouter();
@@ -58,16 +57,9 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
         await deleteDoc(ref).then(router.push(`/${username}/scorecards`));
     };
 
-    const updateHole = async (holeId, score) => {
-        const holeRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
-        await updateDoc(holeRef, {
-            content: {
-                score: {
-                    [holeId]: score,
-                },
-            },
-            updatedAt: serverTimeStamp,
-        });
+    const updateHole = (e) => {
+        modalOpen ? close() : open();
+        setHoleId(e.target.getAttribute('value'));
     };
 
     return scorecard ? (
@@ -104,17 +96,17 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
-                        <span onClick={() => (modalOpen ? close() : open())}>
-                            {score.hole1}
-                        </span>
-                        <span>{score.hole2}</span>
-                        <span>{score.hole3}</span>
-                        <span>{score.hole4}</span>
-                        <span>{score.hole5}</span>
-                        <span>{score.hole6}</span>
-                        <span>{score.hole7}</span>
-                        <span>{score.hole8}</span>
-                        <span>{score.hole9}</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return (
+                                <span
+                                    key={hole + 1}
+                                    value={`hole${hole + 1}`}
+                                    onClick={updateHole}
+                                >
+                                    {eval(`score.hole${hole + 1}`)}
+                                </span>
+                            );
+                        })}
                         <span className={styles.sub}>0</span>
                     </div>
                 </article>
@@ -149,17 +141,19 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
-                        <span>{score.hole10}</span>
-                        <span>{score.hole11}</span>
-                        <span>{score.hole12}</span>
-                        <span>{score.hole13}</span>
-                        <span>{score.hole14}</span>
-                        <span>{score.hole15}</span>
-                        <span>{score.hole16}</span>
-                        <span>{score.hole17}</span>
-                        <span>{score.hole18}</span>
-                        <span className={styles.sub}>0</span>
-                        <span className={styles.total}>0</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return (
+                                <span
+                                    key={hole + 11}
+                                    value={`hole${hole + 11}`}
+                                    onClick={updateHole}
+                                >
+                                    {eval(`score.hole${hole + 11}`)}
+                                </span>
+                            );
+                        })}
+                        <span>0</span>
+                        <span>0</span>
                     </div>
                 </article>
             </div>
@@ -169,7 +163,12 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
                 onExitComplete={() => null}
             >
                 {modalOpen && (
-                    <ScoreModal modalOpen={modalOpen} handleClose={close} />
+                    <ScoreModal
+                        modalOpen={modalOpen}
+                        handleClose={close}
+                        holeId={holeId}
+                        slug={slug}
+                    />
                 )}
             </AnimatePresence>
         </AuthCheck>

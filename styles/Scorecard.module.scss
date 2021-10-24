@@ -25,6 +25,16 @@
         color: #f63;
         span {
             padding: 0.55rem 0;
+            /* For Most Browsers */
+            &::selection {
+                color: none;
+                background: none;
+            }
+            /* For Mozilla Firefox */
+            &::-moz-selection {
+                color: none;
+                background: none;
+            }
             &:not(:nth-child(11), :nth-child(1), :nth-child(21), :last-child) {
                 &:hover {
                     background-color: #f63;

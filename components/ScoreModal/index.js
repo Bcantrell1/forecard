@@ -1,9 +1,13 @@
 import { motion } from 'framer-motion';
 import Backdrop from '../Backdrop';
+import { useState } from 'react';
+import { updateScore } from '../../lib/firebase';
 
 import styles from '../../styles/Modal.module.scss';
 
-const Modal = ({ handleClose, text }) => {
+const Modal = ({ handleClose, holeId, slug }) => {
+    const [score, setScore] = useState(0);
+    const [isValid, setIsValid] = useState(false);
     const dropIn = {
         hidden: {
             y: '-100vh',
@@ -24,6 +28,22 @@ const Modal = ({ handleClose, text }) => {
             opacity: 0,
         },
     };
+
+    const handleClick = (e) => {
+        const val = e.target.innerHTML.toLowerCase();
+        if (val > 0) {
+            setScore(val);
+            setIsValid(true);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        updateScore(slug, score, holeId);
+        console.log(`Score for ${holeId} updated to ${score}`);
+        handleClose();
+    };
+
     return (
         <Backdrop onClick={handleClose}>
             <motion.div
@@ -34,8 +54,19 @@ const Modal = ({ handleClose, text }) => {
                 animate="visible"
                 exit="exit"
             >
-                <p>{text}</p>
-                <button onClick={handleClose}>Close</button>
+                <form onSubmit={handleSubmit}>
+                    {[...Array(10).keys()].map((num) => {
+                        return (
+                            <div onClick={handleClick} key={num + 1}>
+                                {num + 1}
+                            </div>
+                        );
+                    })}
+                    <button type="submit" disabled={!isValid}>
+                        Save Score
+                    </button>
+                    <button onClick={handleClose}>Close</button>
+                </form>
             </motion.div>
         </Backdrop>
     );

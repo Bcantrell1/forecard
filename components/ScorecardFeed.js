@@ -7,7 +7,10 @@ const ScorecardFeed = ({ scorecards }) => {
     return scorecards ? (
         <div className={styles.cardWrapper}>
             {scorecards.map((scorecard) => (
-                <ScorecardItem card={scorecard} key={scorecard.slug} />
+                <ScorecardItem
+                    card={scorecard}
+                    key={JSON.parse(scorecard).slug}
+                />
             ))}
         </div>
     ) : null;
@@ -15,15 +18,16 @@ const ScorecardFeed = ({ scorecards }) => {
 
 const ScorecardItem = ({ card }) => {
     const router = useRouter();
+    const cardData = JSON.parse(card);
     return (
         <div
             className={styles.cardItem}
             onClick={() =>
-                router.push(`/${card.username}/scorecards/${card.slug}`)
+                router.push(`/${cardData.username}/scorecards/${cardData.slug}`)
             }
         >
             <div className={styles.cardHeader}>
-                <div className={styles.cardUser}>{card.title}</div>
+                <div className={styles.cardUser}>{cardData.title}</div>
             </div>
             <Image
                 className={styles.cardImage}
