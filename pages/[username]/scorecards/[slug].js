@@ -40,6 +40,9 @@ export async function getServerSideProps({ params }) {
 const Scorecard = ({ user, username, userUid, slug }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [cardData, setCardData] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [frontTotal, setFrontTotal] = useState(0);
+    const [backTotal, setBackTotal] = useState(0);
     const [holeId, setHoleId] = useState('');
     const close = () => setModalOpen(false);
     const open = () => setModalOpen(true);
@@ -56,11 +59,43 @@ const Scorecard = ({ user, username, userUid, slug }) => {
     };
 
     useEffect(() => {
+        const addTotal = (cardData) => {
+            return Object.values(cardData.content.score).reduce(
+                (acc, current) => parseInt(current) + parseInt(acc)
+            );
+        };
+
+        const addFront = (cardData) => {
+            const values = Object.entries(cardData.content.score);
+            let total = 0;
+            values.forEach((val) => {
+                const hole = val[0].replace('hole', '');
+                if (hole <= 9) {
+                    total += parseInt(val[1]);
+                }
+            });
+            return total;
+        };
+
+        const addBack = (cardData) => {
+            const values = Object.entries(cardData.content.score);
+            let total = 0;
+            values.forEach((val) => {
+                const hole = val[0].replace('hole', '');
+                if (hole >= 10) {
+                    total += parseInt(val[1]);
+                }
+            });
+            return total;
+        };
+
         const docRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
         const q = query(docRef);
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             setCardData(querySnapshot.data());
-            console.log(cardData);
+            setTotal(addTotal(querySnapshot.data()));
+            setFrontTotal(addFront(querySnapshot.data()));
+            setBackTotal(addBack(querySnapshot.data()));
         });
         return unsubscribe;
     }, []);
@@ -68,8 +103,6 @@ const Scorecard = ({ user, username, userUid, slug }) => {
     return cardData.content ? (
         <AuthCheck user={user}>
             <h1>{slug}</h1>
-            <button onClick={deleteCard}> Delete </button>
-            <div>{cardData.content.score.hole1}</div>
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
@@ -94,7 +127,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                                 </span>
                             );
                         })}
-                        <span>0</span>
+                        <span>{cardData.content.par.front}</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -111,7 +144,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                                 </span>
                             );
                         })}
-                        <span className={styles.sub}>0</span>
+                        <span>{frontTotal}</span>
                     </div>
                 </article>
                 <article className={styles.back9}>
@@ -138,8 +171,8 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                                 </span>
                             );
                         })}
-                        <span>0</span>
-                        <span>0</span>
+                        <span>{cardData.content.par.back}</span>
+                        <span>{cardData.content.par.total}</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -158,11 +191,12 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                                 </span>
                             );
                         })}
-                        <span>0</span>
-                        <span>0</span>
+                        <span>{backTotal}</span>
+                        <span>{total}</span>
                     </div>
                 </article>
             </div>
+            <button onClick={deleteCard}> Delete </button>
             <AnimatePresence
                 initial={false}
                 exitBeforeEnter={true}
