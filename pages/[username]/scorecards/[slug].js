@@ -1,13 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
     firestore,
     getUserByUsername,
     getUserUid,
-    serverTimeStamp,
-    getScorecard,
 } from '../../../lib/firebase';
-import { doc, getDoc, deleteDoc, updateDoc } from '@firebase/firestore';
+import { doc, deleteDoc, onSnapshot, query } from '@firebase/firestore';
 
 import styles from '../../../styles/Scorecard.module.scss';
 import { AnimatePresence } from 'framer-motion';
@@ -20,15 +18,13 @@ export async function getServerSideProps({ params }) {
     const userData = await getUserByUsername(username);
     const userUid = await getUserUid(username);
     let user = null;
-    let scorecard = null;
 
-    if (!userData) {
+    if (!userData && userUid) {
         return { notFound: true };
     }
 
-    if (userData) {
+    if (userData && userUid) {
         user = userData;
-        scorecard = await getScorecard(userUid, slug);
     }
 
     return {
@@ -37,20 +33,17 @@ export async function getServerSideProps({ params }) {
             username,
             userUid,
             slug,
-            scorecard,
         },
     };
 }
 
-const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
+const Scorecard = ({ user, username, userUid, slug }) => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [cardData, setCardData] = useState([]);
     const [holeId, setHoleId] = useState('');
     const close = () => setModalOpen(false);
     const open = () => setModalOpen(true);
     const router = useRouter();
-    const card = JSON.parse(scorecard);
-    const par = card.content.par;
-    const score = card.content.score;
 
     const deleteCard = async () => {
         const ref = doc(firestore, `users/${userUid}/scorecards/${slug}`);
@@ -62,37 +55,46 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
         setHoleId(e.target.getAttribute('value'));
     };
 
-    return scorecard ? (
+    useEffect(() => {
+        const docRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
+        const q = query(docRef);
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            setCardData(querySnapshot.data());
+            console.log(cardData);
+        });
+        return unsubscribe;
+    }, []);
+
+    return cardData.content ? (
         <AuthCheck user={user}>
             <h1>{slug}</h1>
             <button onClick={deleteCard}> Delete </button>
+            <div>{cardData.content.score.hole1}</div>
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
                         <span>Front</span>
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return <span key={hole + 1}>{hole + 1}</span>;
+                        })}
                         <span>Out</span>
                     </div>
                     <div className={styles.par}>
                         <span>Par</span>
-                        <span>{par.hole1}</span>
-                        <span>{par.hole2}</span>
-                        <span>{par.hole3}</span>
-                        <span>{par.hole4}</span>
-                        <span>{par.hole5}</span>
-                        <span>{par.hole6}</span>
-                        <span>{par.hole7}</span>
-                        <span>{par.hole8}</span>
-                        <span>{par.hole9}</span>
-                        <span>{par.front}</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return (
+                                <span
+                                    key={hole + 1}
+                                    value={`hole${hole + 1}`}
+                                    onClick={updateHole}
+                                >
+                                    {eval(
+                                        `cardData.content.par.hole${hole + 1}`
+                                    )}
+                                </span>
+                            );
+                        })}
+                        <span>0</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
@@ -103,7 +105,9 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
                                     value={`hole${hole + 1}`}
                                     onClick={updateHole}
                                 >
-                                    {eval(`score.hole${hole + 1}`)}
+                                    {eval(
+                                        `cardData.content.score.hole${hole + 1}`
+                                    )}
                                 </span>
                             );
                         })}
@@ -113,42 +117,44 @@ const Scorecard = ({ user, username, userUid, slug, scorecard }) => {
                 <article className={styles.back9}>
                     <div className={styles.hole}>
                         <span>Back</span>
-                        <span>10</span>
-                        <span>11</span>
-                        <span>12</span>
-                        <span>13</span>
-                        <span>14</span>
-                        <span>15</span>
-                        <span>16</span>
-                        <span>17</span>
-                        <span>18</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return <span key={hole + 10}>{hole + 10}</span>;
+                        })}
                         <span>In</span>
                         <span>Total</span>
                     </div>
                     <div className={styles.par}>
                         <span>Par</span>
-                        <span>{par.hole10}</span>
-                        <span>{par.hole11}</span>
-                        <span>{par.hole12}</span>
-                        <span>{par.hole13}</span>
-                        <span>{par.hole14}</span>
-                        <span>{par.hole15}</span>
-                        <span>{par.hole16}</span>
-                        <span>{par.hole17}</span>
-                        <span>{par.hole18}</span>
-                        <span>{par.back}</span>
-                        <span>{par.total}</span>
+                        {[...Array(9).keys()].map((hole) => {
+                            return (
+                                <span
+                                    key={hole + 10}
+                                    value={`hole${hole + 10}`}
+                                    onClick={updateHole}
+                                >
+                                    {eval(
+                                        `cardData.content.par.hole${hole + 10}`
+                                    )}
+                                </span>
+                            );
+                        })}
+                        <span>0</span>
+                        <span>0</span>
                     </div>
                     <div className={styles.score}>
                         <span>Score</span>
                         {[...Array(9).keys()].map((hole) => {
                             return (
                                 <span
-                                    key={hole + 11}
-                                    value={`hole${hole + 11}`}
+                                    key={hole + 10}
+                                    value={`hole${hole + 10}`}
                                     onClick={updateHole}
                                 >
-                                    {eval(`score.hole${hole + 11}`)}
+                                    {eval(
+                                        `cardData.content.score.hole${
+                                            hole + 10
+                                        }`
+                                    )}
                                 </span>
                             );
                         })}
