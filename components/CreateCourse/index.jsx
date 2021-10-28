@@ -82,7 +82,6 @@ const CreateCourse = () => {
 
     const updatePar = (hole, score) => {
         setCourseData({ ...courseData, [hole]: { par: score } });
-        console.log(courseData);
     };
 
     return (
@@ -122,6 +121,7 @@ const CreateCourse = () => {
                                         }
                                         required
                                     >
+                                        <option></option>
                                         {[...Array(3).keys()].map((score) => (
                                             <option key={score + 3}>
                                                 {score + 3}
@@ -132,7 +132,16 @@ const CreateCourse = () => {
                             );
                         })}
 
-                        <span>0</span>
+                        <span>
+                            <input
+                                onChange={(e) =>
+                                    setCourseData({
+                                        ...courseData,
+                                        front: e.target.value,
+                                    })
+                                }
+                            />
+                        </span>
                     </div>
                 </article>
 
@@ -161,6 +170,7 @@ const CreateCourse = () => {
                                         }
                                         required
                                     >
+                                        <option></option>
                                         {[...Array(3).keys()].map((score) => (
                                             <option key={score + 3}>
                                                 {score + 3}
@@ -171,8 +181,26 @@ const CreateCourse = () => {
                             );
                         })}
 
-                        <span>0</span>
-                        <span>0</span>
+                        <span>
+                            <input
+                                onChange={(e) =>
+                                    setCourseData({
+                                        ...courseData,
+                                        back: e.target.value,
+                                    })
+                                }
+                            />
+                        </span>
+                        <span>
+                            <input
+                                onChange={(e) =>
+                                    setCourseData({
+                                        ...courseData,
+                                        total: e.target.value,
+                                    })
+                                }
+                            />
+                        </span>
                     </div>
                 </article>
             </div>
