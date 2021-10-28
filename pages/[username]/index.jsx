@@ -1,5 +1,5 @@
-import AuthCheck from '../../components/AuthCheck';
-import ScorecardList from '../../components/ScorecardList';
+import AuthCheck from '../../components/Utilities/AuthCheck';
+import ScorecardFeed from '../../components/Scorecard/ScorecardFeed';
 import NewScorecard from '../../components/NewScorecard';
 import { UserProfile } from '../../components/UserProfile';
 import {
@@ -39,7 +39,7 @@ const UserProfilePage = ({ user, scorecards }) => {
             <AuthCheck user={user}>
                 <UserProfile user={user} />
                 <NewScorecard />
-                <ScorecardList scorecardList={scorecards} />
+                <ScorecardFeed scorecards={scorecards} />
             </AuthCheck>
         </main>
     );

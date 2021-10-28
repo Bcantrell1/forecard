@@ -1,5 +1,5 @@
-import AuthCheck from '../../../components/AuthCheck';
-import ScorecardList from '../../../components/ScorecardList';
+import AuthCheck from '../../../components/Utilities/AuthCheck';
+import ScorecardFeed from '../../../components/Scorecard/ScorecardFeed';
 import NewScorecard from '../../../components/NewScorecard';
 
 import {
@@ -37,7 +37,7 @@ const Scorecards = ({ user, scorecards }) => {
         <main>
             <AuthCheck user={user}>
                 <NewScorecard />
-                <ScorecardList scorecardList={scorecards} />
+                <ScorecardFeed scorecards={scorecards} />
             </AuthCheck>
         </main>
     );

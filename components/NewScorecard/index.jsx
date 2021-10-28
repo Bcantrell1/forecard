@@ -1,10 +1,12 @@
-import { useState, useEffect, useContext, useCallback, useRef } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { UserContext } from '../lib/context';
-import { serverTimeStamp, firestore, auth } from '../lib/firebase';
+import { UserContext } from '../../lib/context';
+import { serverTimeStamp, firestore, auth } from '../../lib/firebase';
 import { collection, doc, getDoc, setDoc, getDocs } from 'firebase/firestore';
 
-import { kebabCase, debounce, pick } from 'lodash';
+import TitleMessage from './components/TitleMessage';
+
+import { kebabCase, debounce } from 'lodash';
 import toast from 'react-hot-toast';
 
 const NewScorecard = () => {
@@ -22,8 +24,8 @@ const NewScorecard = () => {
     const [cities, setCities] = useState(null);
     const [courses, setCourses] = useState(null);
     const [currentProvence, setCurrentProvence] = useState('');
-    const [currentCity, setCurrentCity] = useState('');
-    const [currentCourse, setCurrentCourse] = useState('');
+    const [currentCity, setCurrentCity] = useState(null);
+    const [currentCourse, setCurrentCourse] = useState(null);
     const [pickedCourse, setPickedCourse] = useState({});
 
     //Validation
@@ -155,6 +157,7 @@ const NewScorecard = () => {
             createdAt: serverTimeStamp,
             updatedAt: serverTimeStamp,
         };
+
         await setDoc(ref, data);
 
         toast.success('Scorecard Saved');
@@ -176,48 +179,19 @@ const NewScorecard = () => {
         setPickedCourse(data);
     };
 
-    const getStates = async () => {
-        let states = [];
-        const ref = collection(firestore, `courses`);
-        let stateSnapshot = await getDocs(ref);
-        stateSnapshot.forEach((state) => {
-            states.push(state.id);
+    const queryCollection = async (path, setState) => {
+        let array = [];
+        const ref = collection(firestore, path);
+        let refSnapshot = await getDocs(ref);
+        refSnapshot.forEach((collection) => {
+            array.push(collection.id);
         });
-        setStates(states);
-    };
-
-    const getCities = async (state) => {
-        let cities = [];
-        if (state) {
-            const ref = collection(firestore, `courses/${state}/city`);
-            let citySnapshot = await getDocs(ref);
-            citySnapshot.forEach((city) => {
-                console.log(city.id);
-                cities.push(city.id);
-            });
-            setCities(cities);
-        }
-    };
-
-    const getCourses = async (state, city) => {
-        let courses = [];
-        if (state && city) {
-            const ref = collection(
-                firestore,
-                `courses/${state}/city/${city}/course`
-            );
-            let courseList = await getDocs(ref);
-            courseList.forEach((course) => {
-                console.log(course.id);
-                courses.push(course.id);
-            });
-        }
-        setCourses(courses);
+        setState(array);
     };
 
     useEffect(() => {
         checkTitle(title);
-        getStates();
+        queryCollection(`courses`, setStates);
     }, [title]);
 
     const checkTitle = useCallback(
@@ -229,7 +203,7 @@ const NewScorecard = () => {
                 );
                 const checkTitle = await getDoc(ref);
                 const exists = checkTitle.exists();
-                console.log('Firestore read executed!');
+                console.log('Firestore read executed! ', exists);
                 setIsValidTitle(!exists);
                 setLoading(false);
             }
@@ -241,7 +215,6 @@ const NewScorecard = () => {
         <form onSubmit={createScorecard}>
             <p>New Scorecard</p>
             <input
-                value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Scorecard Name"
                 required
@@ -255,10 +228,9 @@ const NewScorecard = () => {
             <p>Scorecard Name: {slug}</p>
             {states ? (
                 <select
-                    value={currentProvence}
                     onClick={(e) => {
                         setProvence(e.target.value);
-                        getCities(e.target.value);
+                        queryCollection(`courses/${states}/city`, setCities);
                         setCurrentProvence(e.target.value);
                     }}
                 >
@@ -273,10 +245,12 @@ const NewScorecard = () => {
             ) : null}
             {cities ? (
                 <select
-                    value={currentCity}
                     onClick={(e) => {
                         setCurrentCity(e.target.value);
-                        getCourses(provence, e.target.value);
+                        queryCollection(
+                            `courses/${provence}/city/${e.target.value}/course`,
+                            setCourses
+                        );
                     }}
                 >
                     {cities.map((city) => {
@@ -290,7 +264,6 @@ const NewScorecard = () => {
             ) : null}
             {courses ? (
                 <select
-                    value={currentCourse}
                     onClick={(e) => {
                         setCurrentCourse(e.target.value);
                         getCourse(currentProvence, currentCity, e.target.value);
@@ -314,30 +287,6 @@ const NewScorecard = () => {
             </button>
         </form>
     );
-};
-
-const TitleMessage = ({ title, isValidTitle, loading, isValid }) => {
-    if (loading) {
-        return <p>Checking valid title...</p>;
-    } else if (isValidTitle && isValid) {
-        return <p className="text-success">{title} is available!</p>;
-    } else if (!isValid && isValidTitle) {
-        return (
-            <p className="text-success">
-                The title should be between 3 and 100 characters,
-                <br />
-                and cannot be a duplicate of another scorecard.
-            </p>
-        );
-    } else if (title && !isValidTitle) {
-        return (
-            <p className="text-danger">
-                You already used <strong>{title}</strong> as a title!
-            </p>
-        );
-    } else {
-        return <p></p>;
-    }
 };
 
 export default NewScorecard;

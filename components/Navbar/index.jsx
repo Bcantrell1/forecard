@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { UserContext } from '../lib/context';
-import styles from '../styles/Navbar.module.scss';
+import { UserContext } from '../../lib/context';
+import styles from '../../styles/Navbar.module.scss';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from '../Utilities/ThemeToggle';
 
 const Navbar = () => {
     const { user, username } = useContext(UserContext);

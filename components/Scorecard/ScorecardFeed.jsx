@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../styles/ScorecardFeed.module.scss';
+import styles from '../../styles/ScorecardFeed.module.scss';
 import { useRouter } from 'next/router';
 import React from 'react';
 

@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { auth } from '../lib/firebase';
+import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
-import styles from '../styles/UserProfile.module.scss';
+import styles from '../../styles/UserProfile.module.scss';
 import { useRouter } from 'next/dist/client/router';
 export const UserProfile = ({ user }) => {
     return (

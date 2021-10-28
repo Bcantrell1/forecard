@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import Backdrop from '../Backdrop';
+import Backdrop from '../../Backdrop';
 import { useState } from 'react';
-import { updateScore } from '../../lib/firebase';
+import { updateScore } from '../../../lib/firebase';
+import toast from 'react-hot-toast';
+import styles from '../../../styles/Modal.module.scss';
 
-import styles from '../../styles/Modal.module.scss';
-
-const Modal = ({ handleClose, holeId, slug }) => {
+const UpdateModal = ({ handleClose, holeId, slug }) => {
     const [score, setScore] = useState(0);
     const [isValid, setIsValid] = useState(false);
     const dropIn = {
@@ -41,6 +41,7 @@ const Modal = ({ handleClose, holeId, slug }) => {
         e.preventDefault();
         updateScore(slug, score, holeId);
         console.log(`Score for ${holeId} updated to ${score}`);
+        toast.success('Hole Updated');
         handleClose();
     };
 
@@ -65,11 +66,13 @@ const Modal = ({ handleClose, holeId, slug }) => {
                     <button type="submit" disabled={!isValid}>
                         Save Score
                     </button>
-                    <button onClick={handleClose}>Close</button>
+                    <button type="button" onClick={handleClose}>
+                        Close
+                    </button>
                 </form>
             </motion.div>
         </Backdrop>
     );
 };
 
-export default Modal;
+export default UpdateModal;

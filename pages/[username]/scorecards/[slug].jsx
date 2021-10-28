@@ -7,11 +7,13 @@ import {
 } from '../../../lib/firebase';
 import { doc, deleteDoc, onSnapshot, query } from '@firebase/firestore';
 
+import { addTotal, addFront, addBack } from '../../../utility/helper';
+
 import styles from '../../../styles/Scorecard.module.scss';
 import { AnimatePresence } from 'framer-motion';
 
-import AuthCheck from '../../../components/AuthCheck';
-import ScoreModal from '../../../components/ScoreModal';
+import AuthCheck from '../../../components/Utilities/AuthCheck';
+import UpdateModal from '../../../components/Scorecard/UpdateModal';
 
 export async function getServerSideProps({ params }) {
     const { username, slug } = params;
@@ -39,7 +41,7 @@ export async function getServerSideProps({ params }) {
 
 const Scorecard = ({ user, username, userUid, slug }) => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [cardData, setCardData] = useState([]);
+    const [cardData, setCardData] = useState(null);
     const [total, setTotal] = useState(0);
     const [frontTotal, setFrontTotal] = useState(0);
     const [backTotal, setBackTotal] = useState(0);
@@ -50,7 +52,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
 
     const deleteCard = async () => {
         const ref = doc(firestore, `users/${userUid}/scorecards/${slug}`);
-        await deleteDoc(ref).then(router.push(`/${username}/scorecards`));
+        await deleteDoc(ref).then(() => router.push(`/${username}/scorecards`));
     };
 
     const updateHole = (e) => {
@@ -58,51 +60,28 @@ const Scorecard = ({ user, username, userUid, slug }) => {
         setHoleId(e.target.getAttribute('value'));
     };
 
-    useEffect(() => {
-        const addTotal = (cardData) => {
-            return Object.values(cardData.content.score).reduce(
-                (acc, current) => parseInt(current) + parseInt(acc)
-            );
-        };
-
-        const addFront = (cardData) => {
-            const values = Object.entries(cardData.content.score);
-            let total = 0;
-            values.forEach((val) => {
-                const hole = val[0].replace('hole', '');
-                if (hole <= 9) {
-                    total += parseInt(val[1]);
-                }
-            });
-            return total;
-        };
-
-        const addBack = (cardData) => {
-            const values = Object.entries(cardData.content.score);
-            let total = 0;
-            values.forEach((val) => {
-                const hole = val[0].replace('hole', '');
-                if (hole >= 10) {
-                    total += parseInt(val[1]);
-                }
-            });
-            return total;
-        };
-
+    const setupScorecard = async () => {
         const docRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
         const q = query(docRef);
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            setCardData(querySnapshot.data());
-            setTotal(addTotal(querySnapshot.data()));
-            setFrontTotal(addFront(querySnapshot.data()));
-            setBackTotal(addBack(querySnapshot.data()));
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+            const data = await querySnapshot.data();
+            setCardData(data);
+            setTotal(addTotal(data));
+            setFrontTotal(addFront(data));
+            setBackTotal(addBack(data));
         });
+
         return unsubscribe;
+    };
+
+    useEffect(() => {
+        setupScorecard();
     }, []);
 
-    return cardData.content ? (
+    return cardData ? (
         <AuthCheck user={user}>
             <h1>{slug}</h1>
+
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
@@ -112,6 +91,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                         })}
                         <span>Out</span>
                     </div>
+
                     <div className={styles.par}>
                         <span>Par</span>
                         {[...Array(9).keys()].map((hole) => {
@@ -129,6 +109,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                         })}
                         <span>{cardData.content.par.front}</span>
                     </div>
+
                     <div className={styles.score}>
                         <span>Score</span>
                         {[...Array(9).keys()].map((hole) => {
@@ -147,6 +128,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                         <span>{frontTotal}</span>
                     </div>
                 </article>
+
                 <article className={styles.back9}>
                     <div className={styles.hole}>
                         <span>Back</span>
@@ -156,6 +138,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                         <span>In</span>
                         <span>Total</span>
                     </div>
+
                     <div className={styles.par}>
                         <span>Par</span>
                         {[...Array(9).keys()].map((hole) => {
@@ -174,6 +157,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                         <span>{cardData.content.par.back}</span>
                         <span>{cardData.content.par.total}</span>
                     </div>
+
                     <div className={styles.score}>
                         <span>Score</span>
                         {[...Array(9).keys()].map((hole) => {
@@ -196,14 +180,16 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                     </div>
                 </article>
             </div>
+
             <button onClick={deleteCard}> Delete </button>
+
             <AnimatePresence
                 initial={false}
                 exitBeforeEnter={true}
                 onExitComplete={() => null}
             >
                 {modalOpen && (
-                    <ScoreModal
+                    <UpdateModal
                         modalOpen={modalOpen}
                         handleClose={close}
                         holeId={holeId}

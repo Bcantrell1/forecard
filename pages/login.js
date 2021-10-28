@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { UserContext } from '../lib/context';
 
-import SignInButton from '../components/SignInButton';
+import SignInButton from '../components/Utilities/SignInButton';
 import UserNameForm from '../components/UserNameForm';
 import { useRouter } from 'next/dist/client/router';
 

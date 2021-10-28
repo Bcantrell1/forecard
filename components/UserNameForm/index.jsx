@@ -1,7 +1,11 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
-import { UserContext } from '../lib/context';
-import { firestore } from '../lib/firebase';
+import { UserContext } from '../../lib/context';
+
+import { firestore } from '../../lib/firebase';
 import { writeBatch, getDoc, doc } from 'firebase/firestore';
+
+import UsernameMessage from './components/UsernameMessage';
+
 import { debounce } from 'lodash';
 
 const UserNameForm = () => {
@@ -55,13 +59,13 @@ const UserNameForm = () => {
         checkUsername(formValue);
     }, [formValue]);
 
-    // Hit the database for username match after each debounced change
-    // useCallback is required for debounce to work
+    // Check the database for username match after each change
     const checkUsername = useCallback(
         debounce(async (username) => {
             if (username.length >= 3) {
                 const ref = doc(firestore, `usernames/${username}`);
-                const { exists } = await getDoc(ref);
+                const queryRef = await getDoc(ref);
+                const exists = queryRef.exists();
                 console.log('Firestore read executed!');
                 setIsValid(!exists);
                 setLoading(false);
@@ -106,18 +110,6 @@ const UserNameForm = () => {
             </section>
         )
     );
-};
-
-const UsernameMessage = ({ username, isValid, loading }) => {
-    if (loading) {
-        return <p>Checking...</p>;
-    } else if (isValid) {
-        return <p className="text-success">{username} is available!</p>;
-    } else if (username && !isValid) {
-        return <p className="text-danger">That username is taken!</p>;
-    } else {
-        return <p></p>;
-    }
 };
 
 export default UserNameForm;
