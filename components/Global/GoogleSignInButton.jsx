@@ -1,9 +1,8 @@
-import { auth, googleAuthProvider } from '../../lib/firebase';
 import Image from 'next/image';
+import { auth, googleAuthProvider } from '../../lib/firebase';
+import { signInWithPopup } from '@firebase/auth';
 
-import { signInWithPopup } from 'firebase/auth';
-
-const SignInButton = () => {
+function GoogleSignInButton() {
     const googleSignIn = async () => {
         await signInWithPopup(auth, googleAuthProvider);
     };
@@ -17,6 +16,6 @@ const SignInButton = () => {
             onClick={googleSignIn}
         />
     );
-};
+}
 
-export default SignInButton;
+export default GoogleSignInButton;

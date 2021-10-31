@@ -206,81 +206,94 @@ const NewScorecard = () => {
     }, [title]);
 
     return (
-        <form onSubmit={createScorecard}>
-            <h3>New Scorecard</h3>
-            <input
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Scorecard Name"
-                required
-            />
-            <TitleMessage
-                title={title}
-                isValidTitle={isValidTitle}
-                loading={loading}
-            />
-            <p>Scorecard Name: {slug}</p>
-            {states ? (
-                <select
-                    onClick={(e) => {
-                        setProvence(e.target.value);
-                        queryCollection(`courses/${states}/city`, setCities);
-                        setCurrentProvence(e.target.value);
-                    }}
+        <div>
+            <form onSubmit={createScorecard}>
+                <h3>New Scorecard</h3>
+                <input
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Scorecard Name"
+                    required
+                />
+                <TitleMessage
+                    title={title}
+                    isValidTitle={isValidTitle}
+                    loading={loading}
+                />
+                <p>Scorecard Name: {slug}</p>
+                {states ? (
+                    <select
+                        onClick={(e) => {
+                            setProvence(e.target.value);
+                            queryCollection(
+                                `courses/${states}/city`,
+                                setCities
+                            );
+                            setCurrentProvence(e.target.value);
+                        }}
+                    >
+                        {states.map((state) => {
+                            return (
+                                <option value={state} key={state}>
+                                    {state}
+                                </option>
+                            );
+                        })}
+                    </select>
+                ) : null}
+                {cities ? (
+                    <select
+                        onClick={(e) => {
+                            setCurrentCity(e.target.value);
+                            queryCollection(
+                                `courses/${provence}/city/${e.target.value}/course`,
+                                setCourses
+                            );
+                        }}
+                    >
+                        {cities.map((city) => {
+                            return (
+                                <option value={city} key={city}>
+                                    {city}
+                                </option>
+                            );
+                        })}
+                    </select>
+                ) : null}
+                {courses ? (
+                    <select
+                        onClick={(e) => {
+                            setCurrentCourse(e.target.value);
+                            getCourse(
+                                currentProvence,
+                                currentCity,
+                                e.target.value
+                            );
+                        }}
+                    >
+                        {courses.map((course) => {
+                            return (
+                                <option value={course} key={course}>
+                                    {course}
+                                </option>
+                            );
+                        })}
+                    </select>
+                ) : null}
+                <button
+                    type="submit"
+                    disabled={
+                        !isValidTitle || !currentCourse ? 'disabled' : null
+                    }
+                    className={
+                        !isValidTitle || !currentCourse
+                            ? 'btn-red'
+                            : 'btn-green'
+                    }
                 >
-                    {states.map((state) => {
-                        return (
-                            <option value={state} key={state}>
-                                {state}
-                            </option>
-                        );
-                    })}
-                </select>
-            ) : null}
-            {cities ? (
-                <select
-                    onClick={(e) => {
-                        setCurrentCity(e.target.value);
-                        queryCollection(
-                            `courses/${provence}/city/${e.target.value}/course`,
-                            setCourses
-                        );
-                    }}
-                >
-                    {cities.map((city) => {
-                        return (
-                            <option value={city} key={city}>
-                                {city}
-                            </option>
-                        );
-                    })}
-                </select>
-            ) : null}
-            {courses ? (
-                <select
-                    onClick={(e) => {
-                        setCurrentCourse(e.target.value);
-                        getCourse(currentProvence, currentCity, e.target.value);
-                    }}
-                >
-                    {courses.map((course) => {
-                        return (
-                            <option value={course} key={course}>
-                                {course}
-                            </option>
-                        );
-                    })}
-                </select>
-            ) : null}
-            <button
-                type="submit"
-                disabled={!isValidTitle || !currentCourse ? 'disabled' : null}
-                className={
-                    !isValidTitle || !currentCourse ? 'btn-red' : 'btn-green'
-                }
-            >
-                Create Scorecard
-            </button>
-        </form>
+                    Create Scorecard
+                </button>
+            </form>
+        </div>
     );
 };
 

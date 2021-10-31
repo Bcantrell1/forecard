@@ -40,8 +40,7 @@ const UpdateModal = ({ handleClose, holeId, slug }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         updateScore(slug, score, holeId);
-        console.log(`Score for ${holeId} updated to ${score}`);
-        toast.success('Hole Updated');
+        toast.success(`${holeId}  Updated to ${score}`);
         handleClose();
     };
 
@@ -56,13 +55,20 @@ const UpdateModal = ({ handleClose, holeId, slug }) => {
                 exit="exit"
             >
                 <form onSubmit={handleSubmit}>
-                    {[...Array(10).keys()].map((num) => {
-                        return (
-                            <div onClick={handleClick} key={num + 1}>
-                                {num + 1}
-                            </div>
-                        );
-                    })}
+                    <h3>Enter Your Score</h3>
+                    <div className={styles.scoreContainer}>
+                        {[...Array(10).keys()].map((num) => {
+                            return (
+                                <div
+                                    className={styles.scoreButton}
+                                    onClick={handleClick}
+                                    key={num + 1}
+                                >
+                                    {num + 1}
+                                </div>
+                            );
+                        })}
+                    </div>
                     <button type="submit" disabled={!isValid}>
                         Save Score
                     </button>

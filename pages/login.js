@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import { UserContext } from '../lib/context';
 
-import SignInButton from '../components/Utilities/SignInButton';
+import GoogleSignInButton from '../components/Global/GoogleSignInButton';
 import UserNameForm from '../components/UserNameForm';
 import { useRouter } from 'next/dist/client/router';
 
-const Login = (props) => {
+const Login = () => {
     const router = useRouter();
     const { user, username } = useContext(UserContext);
 
@@ -15,12 +15,18 @@ const Login = (props) => {
                 !username ? (
                     <UserNameForm />
                 ) : (
-                    <button onClick={() => router.push(`/${username}`)}>
-                        User Profile
-                    </button>
+                    <div>
+                        <h1>You are logged in!</h1>
+                        <h3>
+                            Your username is: <strong>{username}</strong>
+                        </h3>
+                        <button onClick={() => router.push(`/${username}`)}>
+                            My Profile
+                        </button>
+                    </div>
                 )
             ) : (
-                <SignInButton />
+                <GoogleSignInButton />
             )}
         </div>
     );

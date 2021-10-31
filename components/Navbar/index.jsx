@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../lib/context';
 import styles from '../../styles/Navbar.module.scss';
 
@@ -8,6 +8,7 @@ import ThemeToggle from '../Utilities/ThemeToggle';
 
 const Navbar = () => {
     const { user, username } = useContext(UserContext);
+    const [currentTheme, setCurrentTheme] = useState('');
     return (
         <nav className={styles.navbar}>
             <ul>
@@ -15,8 +16,12 @@ const Navbar = () => {
                     <Link href="/">
                         <a>
                             <Image
-                                src="/forecard.png"
-                                width={180}
+                                src={
+                                    currentTheme == 'light'
+                                        ? '/logo-dark.png'
+                                        : '/logo-light.png'
+                                }
+                                width={194}
                                 height={70}
                                 layout="responsive"
                                 alt="logo"
@@ -24,7 +29,6 @@ const Navbar = () => {
                         </a>
                     </Link>
                 </li>
-
                 {/* Signed-in */}
                 {username && (
                     <>
@@ -36,7 +40,7 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li>
-                            <ThemeToggle />
+                            <ThemeToggle theme={setCurrentTheme} />
                         </li>
                         <li>
                             <Link href={`/${username}`}>

@@ -1,8 +1,11 @@
-import { setDoc, doc } from '@firebase/firestore';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+
 import SelectLocation from './components/SelectLocation';
+
+import { setDoc, doc } from '@firebase/firestore';
 import { firestore } from '../../lib/firebase';
+
+import toast from 'react-hot-toast';
 import styles from '../../styles/Scorecard.module.scss';
 
 const CreateCourse = () => {

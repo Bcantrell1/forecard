@@ -1,8 +1,6 @@
 import Image from 'next/image';
-import { auth } from '../../lib/firebase';
-import { signOut } from 'firebase/auth';
+import GoogleSignOutButton from '../Global/GoogleSignOutButton';
 import styles from '../../styles/UserProfile.module.scss';
-import { useRouter } from 'next/dist/client/router';
 export const UserProfile = ({ user }) => {
     return (
         <div className={styles.wrapper}>
@@ -20,23 +18,9 @@ export const UserProfile = ({ user }) => {
                         <i>{user.username || 'Anonymous User'}</i>
                     </div>
                     <h1>{user.displayName || 'Anonymous Display Name'}</h1>
-                    <SignOutButton />
+                    <GoogleSignOutButton />
                 </div>
             </div>
         </div>
-    );
-};
-
-const SignOutButton = () => {
-    const router = useRouter();
-    return (
-        <button
-            className={`${styles.profileCard__button} ${styles.buttonOrange}`}
-            onClick={async () =>
-                await signOut(auth).then(() => router.push('/'))
-            }
-        >
-            Sign Out
-        </button>
     );
 };

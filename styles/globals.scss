@@ -15,16 +15,16 @@ body {
 body,
 body[data-theme='light'] {
     --color-text-primary: #083b66;
-    --color-text-secondary: #076963;
+    --color-text-secondary: #c2fbd7;
     --color-bg-primary: #fff;
-    --color-bg-toggle: #1e90ff;
+    --color-bg-toggle: #083b66;
 }
 
 body[data-theme='dark'] {
     --color-text-primary: #c2fbd7;
-    --color-text-secondary: #ff0000;
-    --color-bg-primary: #15232d;
-    --color-bg-toggle: #a9a9a9;
+    --color-text-secondary: #083b66;
+    --color-bg-primary: #083b66;
+    --color-bg-toggle: #c2fbd7;
 }
 
 .back-drop {
