@@ -1,22 +1,16 @@
-const TitleMessage = ({ title, isValidTitle, loading, isValid }) => {
+const TitleMessage = ({ title, isValidTitle, loading }) => {
     if (loading) {
         return <p>Checking valid title...</p>;
-    } else if (isValidTitle && isValid) {
-        return <p className="text-success">{title} is available!</p>;
-    } else if (!isValid && isValidTitle) {
+    } else if (!isValidTitle) {
         return (
             <p className="text-success">
-                The title should be between 3 and 100 characters,
+                The title should be between 3 and 30 characters,
                 <br />
                 and cannot be a duplicate of another scorecard.
             </p>
         );
-    } else if (title && !isValidTitle) {
-        return (
-            <p className="text-danger">
-                You already used <strong>{title}</strong> as a title!
-            </p>
-        );
+    } else if (isValidTitle) {
+        return <p className="text-success">{title} is available!</p>;
     } else {
         return <p></p>;
     }

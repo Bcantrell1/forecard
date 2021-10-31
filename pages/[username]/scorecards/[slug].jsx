@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+
 import {
     firestore,
     getUserByUsername,
@@ -60,23 +61,25 @@ const Scorecard = ({ user, username, userUid, slug }) => {
         setHoleId(e.target.getAttribute('value'));
     };
 
-    const setupScorecard = async () => {
+    const liveScorecard = async (userUid, slug) => {
         const docRef = doc(firestore, `users/${userUid}/scorecards/${slug}`);
         const q = query(docRef);
         const unsubscribe = onSnapshot(q, async (querySnapshot) => {
             const data = await querySnapshot.data();
-            setCardData(data);
-            setTotal(addTotal(data));
-            setFrontTotal(addFront(data));
-            setBackTotal(addBack(data));
+            if (data) {
+                setCardData(data);
+                setTotal(addTotal(data));
+                setFrontTotal(addFront(data));
+                setBackTotal(addBack(data));
+            }
         });
 
         return unsubscribe;
     };
 
     useEffect(() => {
-        setupScorecard();
-    }, []);
+        liveScorecard(userUid, slug);
+    }, [userUid, slug]);
 
     return cardData ? (
         <AuthCheck user={user}>

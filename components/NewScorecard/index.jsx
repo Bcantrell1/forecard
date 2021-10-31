@@ -16,7 +16,6 @@ const NewScorecard = () => {
     //Scorecard
     const [title, setTitle] = useState('');
     const slug = encodeURI(kebabCase(title));
-    const isValid = title.length > 3 && title.length < 100;
 
     //Course Selection
     const [states, setStates] = useState(null);
@@ -36,10 +35,8 @@ const NewScorecard = () => {
         e.preventDefault();
         const uid = auth.currentUser.uid;
         const ref = doc(firestore, 'users', uid, 'scorecards', slug);
-
         const courseName = pickedCourse.name;
         const hole = pickedCourse;
-
         const data = {
             title,
             slug,
@@ -157,11 +154,8 @@ const NewScorecard = () => {
             createdAt: serverTimeStamp,
             updatedAt: serverTimeStamp,
         };
-
         await setDoc(ref, data);
-
         toast.success('Scorecard Saved');
-
         setTimeout(() => {
             router.push(`/${username}/scorecards/${slug}`);
         }, 1000);
@@ -173,9 +167,7 @@ const NewScorecard = () => {
             `courses/${state}/city/${city}/course/${course}`
         );
         const courseSnapshot = await getDoc(courseRef);
-
         const data = courseSnapshot.data();
-
         setPickedCourse(data);
     };
 
@@ -189,31 +181,33 @@ const NewScorecard = () => {
         setState(array);
     };
 
-    useEffect(() => {
-        checkTitle(title);
-        queryCollection(`courses`, setStates);
-    }, [title]);
-
     const checkTitle = useCallback(
         debounce(async (title) => {
-            if (title.length >= 3) {
+            if (title.length >= 3 && title.length < 30) {
                 const ref = doc(
                     firestore,
                     `users/${auth.currentUser.uid}/scorecards/${title}`
                 );
                 const checkTitle = await getDoc(ref);
                 const exists = checkTitle.exists();
-                console.log('Firestore read executed! ', exists);
+                console.log('Firestore read executed! ');
                 setIsValidTitle(!exists);
                 setLoading(false);
+            } else {
+                setIsValidTitle(false);
             }
         }, 500),
         []
     );
 
+    useEffect(() => {
+        checkTitle(title);
+        queryCollection(`courses`, setStates);
+    }, [title]);
+
     return (
         <form onSubmit={createScorecard}>
-            <p>New Scorecard</p>
+            <h3>New Scorecard</h3>
             <input
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Scorecard Name"
@@ -223,7 +217,6 @@ const NewScorecard = () => {
                 title={title}
                 isValidTitle={isValidTitle}
                 loading={loading}
-                isValid={isValid}
             />
             <p>Scorecard Name: {slug}</p>
             {states ? (
@@ -280,8 +273,10 @@ const NewScorecard = () => {
             ) : null}
             <button
                 type="submit"
-                disabled={!isValidTitle || !isValid ? 'disabled' : null}
-                className={!isValidTitle || !isValid ? 'btn-red' : 'btn-green'}
+                disabled={!isValidTitle || !currentCourse ? 'disabled' : null}
+                className={
+                    !isValidTitle || !currentCourse ? 'btn-red' : 'btn-green'
+                }
             >
                 Create Scorecard
             </button>
