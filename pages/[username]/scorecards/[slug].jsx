@@ -83,7 +83,7 @@ const Scorecard = ({ user, username, userUid, slug }) => {
 
     return cardData ? (
         <AuthCheck user={user}>
-            <h1>{slug}</h1>
+            <h1>{cardData.title}</h1>
 
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>

@@ -1,10 +1,13 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '../../lib/context';
+
 import { serverTimeStamp, firestore, auth } from '../../lib/firebase';
 import { collection, doc, getDoc, setDoc, getDocs } from 'firebase/firestore';
 
 import TitleMessage from './components/TitleMessage';
+
+import styles from '../../styles/NewScorecard.module.scss';
 
 import { kebabCase, debounce } from 'lodash';
 import toast from 'react-hot-toast';
@@ -186,7 +189,9 @@ const NewScorecard = () => {
             if (title.length >= 3 && title.length < 30) {
                 const ref = doc(
                     firestore,
-                    `users/${auth.currentUser.uid}/scorecards/${title}`
+                    `users/${
+                        auth.currentUser.uid
+                    }/scorecards/${title.toLowerCase()}`
                 );
                 const checkTitle = await getDoc(ref);
                 const exists = checkTitle.exists();
@@ -206,10 +211,11 @@ const NewScorecard = () => {
     }, [title]);
 
     return (
-        <div>
+        <div className={styles.container}>
             <form onSubmit={createScorecard}>
-                <h3>New Scorecard</h3>
+                <h2>New Scorecard</h2>
                 <input
+                    className={styles.nameInput}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Scorecard Name"
                     required
@@ -220,65 +226,67 @@ const NewScorecard = () => {
                     loading={loading}
                 />
                 <p>Scorecard Name: {slug}</p>
-                {states ? (
-                    <select
-                        onClick={(e) => {
-                            setProvence(e.target.value);
-                            queryCollection(
-                                `courses/${states}/city`,
-                                setCities
-                            );
-                            setCurrentProvence(e.target.value);
-                        }}
-                    >
-                        {states.map((state) => {
-                            return (
-                                <option value={state} key={state}>
-                                    {state}
-                                </option>
-                            );
-                        })}
-                    </select>
-                ) : null}
-                {cities ? (
-                    <select
-                        onClick={(e) => {
-                            setCurrentCity(e.target.value);
-                            queryCollection(
-                                `courses/${provence}/city/${e.target.value}/course`,
-                                setCourses
-                            );
-                        }}
-                    >
-                        {cities.map((city) => {
-                            return (
-                                <option value={city} key={city}>
-                                    {city}
-                                </option>
-                            );
-                        })}
-                    </select>
-                ) : null}
-                {courses ? (
-                    <select
-                        onClick={(e) => {
-                            setCurrentCourse(e.target.value);
-                            getCourse(
-                                currentProvence,
-                                currentCity,
-                                e.target.value
-                            );
-                        }}
-                    >
-                        {courses.map((course) => {
-                            return (
-                                <option value={course} key={course}>
-                                    {course}
-                                </option>
-                            );
-                        })}
-                    </select>
-                ) : null}
+                <div className={styles.courseContainer}>
+                    {states ? (
+                        <select
+                            onClick={(e) => {
+                                setProvence(e.target.value);
+                                queryCollection(
+                                    `courses/${states}/city`,
+                                    setCities
+                                );
+                                setCurrentProvence(e.target.value);
+                            }}
+                        >
+                            {states.map((state) => {
+                                return (
+                                    <option value={state} key={state}>
+                                        {state}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    ) : null}
+                    {cities ? (
+                        <select
+                            onClick={(e) => {
+                                setCurrentCity(e.target.value);
+                                queryCollection(
+                                    `courses/${provence}/city/${e.target.value}/course`,
+                                    setCourses
+                                );
+                            }}
+                        >
+                            {cities.map((city) => {
+                                return (
+                                    <option value={city} key={city}>
+                                        {city}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    ) : null}
+                    {courses ? (
+                        <select
+                            onClick={(e) => {
+                                setCurrentCourse(e.target.value);
+                                getCourse(
+                                    currentProvence,
+                                    currentCity,
+                                    e.target.value
+                                );
+                            }}
+                        >
+                            {courses.map((course) => {
+                                return (
+                                    <option value={course} key={course}>
+                                        {course}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    ) : null}
+                </div>
                 <button
                     type="submit"
                     disabled={

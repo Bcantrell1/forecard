@@ -15,10 +15,18 @@
     padding: 50px 20px;
     padding-top: 100px;
     display: flex;
-    background-image: linear-gradient(-20deg, #f7f1f2 0%, #c2fbd7 100%);
+    background-image: linear-gradient(
+        -20deg,
+        var(--color-text-primary) 0%,
+        #c2fbd7 100%
+    );
 
     display: flex;
-    background-image: linear-gradient(-20deg, #f7f1f2 0%, #c2fbd7 100%);
+    background-image: linear-gradient(
+        -20deg,
+        var(--color-bg-primary) 0%,
+        #c2fbd7 100%
+    );
 
     @media screen and (max-width: 768px) {
         height: auto;

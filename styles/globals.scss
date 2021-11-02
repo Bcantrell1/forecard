@@ -4,26 +4,29 @@
 
 body {
     background: var(--color-bg-primary);
-    margin-top: 3rem;
     font-family: Cantarell, Fira Sans, sans-serif;
     color: var(--color-text-primary);
     transition: background 0.25s ease-in-out;
     margin: 0;
-    height: 100%;
+    position: relative;
+}
+
+main {
+    height: 100vh;
 }
 
 body,
 body[data-theme='light'] {
-    --color-text-primary: #083b66;
+    --color-text-primary: #083b5e;
     --color-text-secondary: #c2fbd7;
     --color-bg-primary: #fff;
-    --color-bg-toggle: #083b66;
+    --color-bg-toggle: #083b5e;
 }
 
 body[data-theme='dark'] {
     --color-text-primary: #c2fbd7;
-    --color-text-secondary: #083b66;
-    --color-bg-primary: #083b66;
+    --color-text-secondary: #083b5e;
+    --color-bg-primary: #083b5e;
     --color-bg-toggle: #c2fbd7;
 }
 
