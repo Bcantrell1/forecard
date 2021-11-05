@@ -83,8 +83,9 @@ const Scorecard = ({ user, username, userUid, slug }) => {
 
     return cardData ? (
         <AuthCheck user={user}>
-            <h1>{cardData.title}</h1>
-
+            <div className={styles.title}>
+                <h1>{cardData.title}</h1>
+            </div>
             <div className={styles.cardContainer}>
                 <article className={styles.front9}>
                     <div className={styles.hole}>
@@ -139,7 +140,6 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                             return <span key={hole + 10}>{hole + 10}</span>;
                         })}
                         <span>In</span>
-                        <span>Total</span>
                     </div>
 
                     <div className={styles.par}>
@@ -158,7 +158,6 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                             );
                         })}
                         <span>{cardData.content.par.back}</span>
-                        <span>{cardData.content.par.total}</span>
                     </div>
 
                     <div className={styles.score}>
@@ -179,12 +178,17 @@ const Scorecard = ({ user, username, userUid, slug }) => {
                             );
                         })}
                         <span>{backTotal}</span>
-                        <span>{total}</span>
                     </div>
                 </article>
             </div>
-
-            <button onClick={deleteCard}> Delete </button>
+            <div className={styles.cardData}>
+                <span>Course Par: {cardData.content.par.total}</span>
+                <span>Your score: {total}</span>
+            </div>
+            <button
+                className={styles.deleteButton}
+                onClick={deleteCard}
+            ></button>
 
             <AnimatePresence
                 initial={false}

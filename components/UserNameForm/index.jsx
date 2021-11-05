@@ -7,11 +7,13 @@ import { writeBatch, getDoc, doc } from 'firebase/firestore';
 import UsernameMessage from './components/UsernameMessage';
 
 import { debounce } from 'lodash';
+import router, { useRouter } from 'next/router';
 
 const UserNameForm = () => {
     const [formValue, setFormValue] = useState('');
     const [isValid, setIsValid] = useState(false);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const { user, username } = useContext(UserContext);
 
@@ -32,6 +34,8 @@ const UserNameForm = () => {
         batch.set(usernameDoc, { uid: user.uid });
 
         await batch.commit();
+
+        router.reload(window.location.pathname);
     };
 
     const onChange = (e) => {
