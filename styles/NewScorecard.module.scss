@@ -23,7 +23,11 @@
     }
 
     select {
-        background: linear-gradient(to right, #3d6def, #8fadfe);
+        background: linear-gradient(
+            to right,
+            var(--color-text-primary),
+            var(--color-text-secondary)
+        );
         display: inline-block;
         line-height: 40px;
         padding: 0 18px;
@@ -35,7 +39,9 @@
         letter-spacing: 2px;
         margin: 5px;
         cursor: pointer;
-        max-width: 320px;
+        max-width: 300px;
+        border: none;
+        border-radius: 6px;
 
         option {
             font-size: 13px;

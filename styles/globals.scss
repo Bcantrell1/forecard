@@ -2,17 +2,18 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background: var(--color-bg-primary);
     font-family: Cantarell, Fira Sans, sans-serif;
     color: var(--color-text-primary);
     transition: background 0.25s ease-in-out;
     margin: 0;
-    position: relative;
-}
-
-main {
-    height: 100vh;
 }
 
 body,

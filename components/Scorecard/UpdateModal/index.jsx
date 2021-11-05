@@ -69,12 +69,14 @@ const UpdateModal = ({ handleClose, holeId, slug }) => {
                             );
                         })}
                     </div>
-                    <button type="submit" disabled={!isValid}>
-                        Save Score
-                    </button>
-                    <button type="button" onClick={handleClose}>
-                        Close
-                    </button>
+                    <div className={styles.buttons}>
+                        <button type="submit" disabled={!isValid}>
+                            Save Score
+                        </button>
+                        <button type="button" onClick={handleClose}>
+                            Close
+                        </button>
+                    </div>
                 </form>
             </motion.div>
         </Backdrop>

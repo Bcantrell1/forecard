@@ -1,18 +1,41 @@
 .modal {
     width: clamp(50%, 700px, 90%);
     height: min(50%, 400px);
-    margin: auto;
-    padding: 0 2rem;
     border-radius: 12px;
     display: grid;
+    align-items: center;
     justify-items: center;
     background-color: var(--color-bg-primary);
-}
+    overflow-y: auto;
+    overflow-x: hidden;
 
-.scoreContainer {
-    display: grid;
-    grid-auto-flow: row;
-}
+    .scoreContainer {
+        display: grid;
+        place-items: center;
+        grid-template-columns: 33% 33% 33%;
+        text-align: center;
+        gap: 0.5rem;
+        margin: 1rem;
 
-.scoreButton {
+        .scoreButton {
+            font-size: 1.5rem;
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid black;
+
+            &:hover {
+                border: 2px solid black;
+                box-shadow: 5px 3px 3px red;
+            }
+
+            &:active {
+                background-color: gray;
+            }
+        }
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
 }
