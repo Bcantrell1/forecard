@@ -276,6 +276,7 @@ const NewScorecard = () => {
                                     e.target.value
                                 );
                             }}
+                            onChange={(e) => setCurrentCourse(e.target.value)}
                         >
                             {courses.map((course) => {
                                 return (
